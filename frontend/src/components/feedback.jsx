@@ -30,7 +30,16 @@ const CLARITY =
   // 'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80'
  
 export default function Feedback() {
+  let eyeContactScore = 60;
+  let confidenceScore = 20;
+  let boldnessScore = 50;
+  let clarityScore = 66;
   const [loading, setLoading] = useState(true);
+  const [eyeContactSuggestion, setEyeContactSuggestion] = useState('');
+  const [confidenceSuggestion, setConfidenceSuggestion] = useState('');
+  const [claritySuggestion, setClaritySuggestion] = useState('');
+  const [boldnessSuggestion, setBoldnessSuggestion] = useState('');
+
   const bgcolor=useColorModeValue('white', 'gray.800');
   const navigate = useNavigate();
   useEffect(() => {
@@ -38,8 +47,61 @@ export default function Feedback() {
       setLoading(false);
     }, 1000);
 
+        // Make API calls for suggestions based on scores
+        const fetchSuggestions = async () => {
+          try {
+            const eyeContactResponse = await fetchSuggestionFromOpenAI(eyeContactScore);
+            setEyeContactSuggestion(eyeContactResponse);
+    
+            const confidenceResponse = await fetchSuggestionFromOpenAI(confidenceScore);
+            setConfidenceSuggestion(confidenceResponse);
+    
+            const clarityResponse = await fetchSuggestionFromOpenAI(clarityScore);
+            setClaritySuggestion(clarityResponse);
+    
+            const boldnessResponse = await fetchSuggestionFromOpenAI(boldnessScore);
+            setBoldnessSuggestion(boldnessResponse);
+          } catch (error) {
+            console.error('Error fetching suggestions:', error);
+          }
+        };
+    
+        fetchSuggestions();
+
     return () => clearTimeout(loaderTimeout);
   }, []);
+
+  const fetchSuggestionFromOpenAI = async (score) => {
+    try {
+      // Replace 'YOUR_API_KEY' with your actual OpenAI GPT-3 API key
+      const apiKey = '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';
+      const apiUrl = 'https://api.openai.com/v1/completions'; // Replace with the actual endpoint
+  
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          prompt: `Improve the score to achieve ${score}.`,
+          max_tokens: 150,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      // Extract and return the suggestion from the OpenAI response
+      return data.choices[0].text.trim();
+    } catch (error) {
+      console.error('Error fetching suggestion from OpenAI:', error);
+      throw error; // Rethrow the error for the caller to handle
+    }
+  };
 
   if (loading) {
     return (
@@ -52,6 +114,10 @@ export default function Feedback() {
       </Center>
     );
   }
+
+  
+
+
   return (
     <>
         <NavBar />
@@ -290,9 +356,12 @@ export default function Feedback() {
           </Heading>
           <Stack direction={'row'} align={'center'}>
             <Text>
+              {boldnessSuggestion}
+            </Text>
+            {/* <Text>
             I think the guy who makes his boldness 100% while attending an interview is confident and assertive. He shows that he is not afraid to speak his mind and express his opinions. He also demonstrates that he can handle challenging situations and deal with criticism. However, he should also be careful not to come across as arrogant or rude. He should balance his boldness with respect and humility. He should listen to the interviewer's questions and feedback, and acknowledge his strengths and weaknesses. He should also show interest and enthusiasm for the job and the company.
 
-</Text>
+            </Text> */}
           </Stack>
         </Stack>
       </Box>

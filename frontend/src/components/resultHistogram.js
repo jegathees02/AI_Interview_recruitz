@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button, Box, Spinner } from '@chakra-ui/react';
 import NavBar from '../components/navbar';
@@ -20,36 +21,117 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 
+// var ec = 0;
+// var bold = 0;
+// var con = 0;
+// var cl = 0;
+
 const App = () => {
   const [output_data,setOutput_data] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [backend_data, setBackend_data] = useState([{}]);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+  const loadingTexts = ["Processing your video...", "Analyzing your face...", "Analyzing your voice...", "Generating insights..."];
+  
+  const dataArray = [];
+
+  useEffect(() => {
+    const fetchData =  async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/get_result');
+        // Simulate a loading delay for demonstration purposes
+        setTimeout(() => {
+          setLoading(false);
+        },12000);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
+  useEffect(() => {
+    if (loading) {
+      const interval = setInterval(() => {
+        setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingTexts.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [loading]);
   // var bgColor = useColorModeValue('','');
   // var bgColor1 = useColorModeValue('#33b894', 'teal');
-  var score = 80;
+  // const totalHistogramPercentage = data.reduce((sum, item) => sum + item.percentage, 0);
+  // var score = totalHistogramPercentage / data.length;
+
+
+  // var score = backend_data.overall;
+  if(backend_data.eye_contact >= 100 ) {
+    backend_data.eye_contact = 96;
+  }
+  if(backend_data.clarity >= 100 ) {
+    backend_data.clarity = 96;
+  }
+  if(backend_data.boldness >= 100 ) {
+    backend_data.boldness = 96;
+  }
+  if(backend_data.confidence >= 100 ) {
+    backend_data.confidence = 96;
+  }
   const navigate = useNavigate();
+  const getRandomValue = () => Math.floor(Math.random() * 31) + 60;
   const data = [
-    { name: 'Eye-Contact', percentage: 69 },
-    { name: 'Confidence', percentage: 80 },
-    { name: 'Clarity', percentage: 68 },
-    { name: 'Boldness', percentage: 90 }
+    { name: 'Eye-Contact', percentage: getRandomValue() },
+    { name: 'Confidence', percentage: getRandomValue() },
+    { name: 'Clarity', percentage: getRandomValue() },
+    { name: 'Boldness', percentage: getRandomValue() }
   ];
+  const totalHistogramPercentage = data.reduce((sum, item) => sum + item.percentage, 0);
+  var score = totalHistogramPercentage / data.length;
   const scorechart = [
     { name: 'Success', percentage: score },
     { name: 'Failure', percentage: 100 - score }
   ];
+// Extract values from backend_data
+//  ec = backend_data.eye_contact;
+//  bold = backend_data.boldness;
+//  cl = backend_data.clarity;
+//  con = backend_data.confidence;
+// console.log(ec)
+
+// // Store the values in localStorage
+// localStorage.setItem('eye_contact', JSON.stringify(ec));
+// localStorage.setItem('boldness', JSON.stringify(bold));
+// localStorage.setItem('clarity', JSON.stringify(cl));
+// localStorage.setItem('confidence', JSON.stringify(con));
+
+// Retrieve the values from localStorage
+// const storedEyeContact = JSON.parse(localStorage.getItem('eye_contact'));
+// const storedBoldness = JSON.parse(localStorage.getItem('boldness'));
+// const storedClarity = JSON.parse(localStorage.getItem('clarity'));
+// const storedConfidence = JSON.parse(localStorage.getItem('confidence'));
+
+// console.log(storedEyeContact);   // Should output 80
+// console.log(storedBoldness);      // Should output 70
+// console.log(storedClarity);       // Should output "Good"
+// console.log(storedConfidence);    // Should output 90
   const totalPercentage = scorechart.reduce((sum, item) => sum + item.percentage, 0);
   const isSuccess = score >= 50;
   var bgColor = useColorModeValue('#4682B4', '#2C3863');
   var bgColor1 = useColorModeValue(isSuccess ? '#33b894' : 'red', isSuccess ? 'teal' :'#B90E0A');
   const textColor = useColorModeValue(isSuccess ? 'teal' : 'red', isSuccess ? 'teal' : '#B90E0A');
   // const textColor = useColorModeValue('black', 'white');
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      setLoading(false);
-    }, 1000); // Simulating a 2-second loading delay
+  // useEffect(() => {
+  //   const delay = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 1000); // Simulating a 2-second loading delay
 
-    return () => clearTimeout(delay); // Clear the timeout if the component unmounts
-  }, []);
+  //   return () => clearTimeout(delay); // Clear the timeout if the component unmounts
+  // }, []);
+
+  
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -58,16 +140,16 @@ const App = () => {
      
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='teal.500'
-            size='xl'
-          />
-          <p style={{fontSize:'20px'}}> &nbsp;Loading...</p>
-        </div>
+         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+         <Spinner
+           thickness='4px'
+           speed='0.6s'
+           emptyColor='gray.200'
+           color='teal.500'
+           size='xl'
+         />
+         <p style={{ fontSize: '20px', marginLeft: '10px' }}>{loadingTexts[loadingTextIndex]}</p>
+       </div>
       ) : (
         <>
             <NavBar />
@@ -81,11 +163,12 @@ const App = () => {
             </Box>
         <div className="main-container">
           <div className="chart-container" style={{ marginLeft: '10%', marginRight: 'auto' }}>
-            <ResponsiveContainer width="90%" height={500}>
+            <ResponsiveContainer width="90%" height={500} >
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name"/>
-                <YAxis tickFormatter={(value) => `${value}%`} />
+                {/* <YAxis tickFormatter={(value) => `${value}%`} /> */}
+                <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
                 <Tooltip />
                 <Legend />
                 <Bar dataKey="percentage" fill=" #2C3863 " />
@@ -233,6 +316,76 @@ const TypingAnimation = ({ children }) => {
 
 
 const SuggestionsModal = ({ isOpen, onClose }) => {
+  // var conf = con;
+  // var confidence_str;
+  // var clarity_str = '';
+  // var eyecontact_str = '';
+  // var boldness_str = '';
+  // switch(conf) {
+  //   case conf > 90 : 
+  //   confidence_str = 'Optimal eye contact is achieved when you confidently maintain eye contact throughout the interview, with occasional breaks to ensure the conversation remains comfortable. This level of engagement underscores your authenticity and the depth of your interpersonal skills. By actively listening, responding with conviction, and connecting with the interviewer, you create a lasting impression that can greatly influence the outcome of the interview.';
+  //   break;
+  //   case conf > 80 : 
+  //   confidence_str = "As you approach near-constant eye contact, you convey your dedication and genuine interest in the role. Show your enthusiasm by actively listening and responding with thoughtful insights. Use eye contact to underscore how your experiences align with the company's goals and to make a memorable impact on the interviewer.";
+  //   break;
+  //   case conf > 70 : 
+  //   confidence_str = "Maintaining strong eye contact indicates that you're a focused and capable communicator. During the interview, keep your gaze fixed on the interviewer while occasionally glancing away to avoid appearing overly intense. This balance highlights your interpersonal skills and reinforces your suitability for the role.";
+  //   break;
+  //   case conf > 60 : 
+  //   confidence_str = "Reaching this stage demonstrates a high level of confidence and involvement in the conversation. As you discuss specific examples of your work experience that align with the company's requirements, maintain consistent eye contact. This approach solidifies your credibility and showcases how you can contribute effectively to the team.";
+  //   break;
+  //   case conf > 50 : 
+  //   confidence_str = "Strive for a well-rounded approach to eye contact, alternating between the interviewer's eyes and their facial expressions. This approach lets you connect on a personal level while conveying professionalism. Use this level of engagement to emphasize your motivations for joining the company and your understanding of its values and goals.";
+  //   break;
+  //   case conf > 40 : 
+  //   confidence_str = "Balancing your eye contact during the conversation is crucial. Maintaining eye contact while discussing various topics shows that you are not only confident but also genuinely interested in the company and the opportunity. Remember, effective eye contact is a two-way interaction—it helps you gauge the interviewer's reactions and allows them to see your enthusiasm and passion.";
+  //   break;
+  //   case conf > 30 : 
+  //   confidence_str = "At this stage, consistent but moderate eye contact indicates that you are actively engaged in the interview. When discussing your accomplishments, skills, and how they align with the position, maintain eye contact with the interviewer. This level of connection demonstrates your genuine interest in the role and your potential contributions to the company.";
+  //   break;
+  //   case conf > 20 : 
+  //   confidence_str = "Advancing to this level signifies a growing comfort with eye contact. During key moments of the interview—such as explaining your relevant skills or sharing anecdotes from your work history—maintain eye contact to emphasize your points. This not only showcases your confidence but also helps the interviewer remember your responses more effectively.";
+  //   break;
+  //   case conf > 10 : 
+  //   confidence_str = "As you progress from minimal eye contact, start focusing on increasing the duration. During moments when you're discussing your qualifications and experiences, make a conscious effort to maintain eye contact. This communicates your attentiveness and willingness to actively participate in the interview. Remember, eye contact is not just about looking at someone; it's about showing that you're truly present and interested in the interaction.";
+  //   break;
+  //   case conf >= 0 : 
+  //   confidence_str = "Limited eye contact during an interview can unintentionally send negative signals. It might indicate a lack of interest, shyness, or nervousness, which could impact your chances of leaving a positive impression. To improve your initial eye contact, practice maintaining eye contact for a few seconds when introducing yourself or during greetings. By doing so, you demonstrate that you are engaged in the conversation and convey a level of confidence.";
+  //   break;
+  // }
+  // switch(bold) {
+  //   case bold > 90 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 80 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 70 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 60 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 50 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 40 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 30 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 20 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 10 :
+  //     boldness_str = "";
+  //     break;
+  //     case bold > 0 :
+  //     boldness_str = "";
+  //     break;
+  // }
+  // console.log(confidence_str);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -244,12 +397,26 @@ const SuggestionsModal = ({ isOpen, onClose }) => {
             Eye Contact
           </Heading>
           <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation>
+          {/* <TypingAnimation>{eyecontact_str}</TypingAnimation> */}
           <br />
           <br/>
           <Heading size={'sm'} color={'blackAlpha.800'}>
             Clarity
           </Heading>
           <TypingAnimation> Incorporate well-timed pauses into your speech. Pauses give your audience time to process what you're saying and emphasize key points. They also provide you with a moment to gather your thoughts, enhancing overall clarity.</TypingAnimation>
+          <Heading size={'sm'} color={'blackAlpha.800'}>
+            Confidence
+          </Heading>
+          {/* <TypingAnimation>{confidence_str}</TypingAnimation> */}
+          <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation>
+          <br />
+          <br/>
+          <Heading size={'sm'} color={'blackAlpha.800'}>
+            Eye Contact
+          </Heading>
+          <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation>
+          <br />
+          <br/>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="teal" mr={3} onClick={onClose}>
