@@ -6,16 +6,16 @@ import ApexChart from "../Charts/linechart";
 import ApexCharts from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 const Dashboard = () => {
-    const generateData = (count, range) => {
-        const data = [];
-        for (let i = 0; i < count; i++) {
-          data.push({
-            x: i + 1,
-            y: Math.floor(Math.random() * (range.max - range.min + 1)) + range.min,
-          });
-        }
-        return data;
-      };
+  const generateData = (count, range) => {
+    const data = [];
+    for (let i = 0; i < count; i++) {
+      data.push({
+        x: i + 1,
+        y: Math.floor(Math.random() * (range.max - range.min + 1)) + range.min,
+      });
+    }
+    return data;
+  };
   const [options, setOptions] = useState({
     chart: {
       height: 350,
@@ -64,15 +64,13 @@ const Dashboard = () => {
 
   const [chartData, setChartData] = useState({
     series: [
-      { name: "Metric1", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric2", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric3", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric4", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric5", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric6", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric7", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric8", data: generateData(18, { min: 0, max: 90 }) },
-      { name: "Metric9", data: generateData(18, { min: 0, max: 90 }) },
+      { name: "Sun", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Mon", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Tue", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Wed", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Thu", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Fri", data: generateData(52, { min: 0, max: 90 }) },
+      { name: "Sat", data: generateData(52, { min: 0, max: 90 }) },
     ],
     options: {
       chart: {
@@ -82,7 +80,7 @@ const Dashboard = () => {
       dataLabels: {
         enabled: false,
       },
-      colors: ["#008FFB"],
+      colors: ["#52BE80"],
       title: {
         text: "HeatMap Chart (Single color)",
       },
@@ -142,7 +140,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="lg:w-full sm:w-full sm: h-[506px] h-[506px] bg-white mt-[8px] rounded-lg border border-borders relative">
-            <div className="flex sm:flex-row flex-col">
+            <div className="flex sm:flex-row flex-col ml-[30px]">
               <div className="flex flex-col relative mr-[50px] mt-[40px] w-[200px] sm:w-[280px] ml-[50px] sm:ml-0">
                 <div id="chart">
                   <ReactApexChart
@@ -155,7 +153,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="flex flex-col relative mr-[20px] mt-[40px] w-[200px] sm:w-[280px]  sm:ml-0">
-                <div className="text-black mt-4 ml-[17.5rem]">
+                <div className="text-black mt-1 ml-[17.5rem]">
                   <div id="chart">
                     <ReactApexChart
                       options={options}
