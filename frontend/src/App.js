@@ -10,6 +10,7 @@ import Edit from './components/edit'
 import Feedbackuser from './components/feedbackuser';
 import Userdetails from './components/userdetails';
 import Dashboard from './components/dashboard';
+import Course from './components/courses';
 function App() {
   return (
     <div>
@@ -23,6 +24,7 @@ function App() {
         <Route path='/feedback'element={<Feedback/>}/>
         <Route path='/edit' element={<Edit/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/courses' element={<Course/>} />
         <Route path='/feedbackuser' element={<Feedbackuser/>} />
         <Route path='/userdetails' element={<Userdetails/>} />
       </Routes>

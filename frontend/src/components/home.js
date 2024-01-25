@@ -12,7 +12,7 @@ import {
 import NavBar from "../components/navbar";
 import { useNavigate } from "react-router-dom";
 import AOS from "aos";
-import "aos/dist/aos";
+import "aos/dist/aos.css";
 
 export default function CallToActionWithAnnotation() {
   const navigate = useNavigate();
@@ -46,8 +46,9 @@ export default function CallToActionWithAnnotation() {
               </div>
 
               {/* Features Section */}
+              
               <div class="w-full max-w-full xl:pt-72 space-y-4 mx-auto text-center">
-                <div class="grid grid-cols-3 gap-8" data-aos="zoom-in">
+                <div class="grid grid-cols-3 gap-8">
                   <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
                     <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
                       <div class="p-2 bg-black bg-opacity-50 rounded-full">
