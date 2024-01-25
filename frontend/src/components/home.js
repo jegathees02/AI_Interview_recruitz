@@ -8,94 +8,225 @@ import {
   Icon,
   useColorModeValue,
   createIcon,
-} from '@chakra-ui/react'
-import NavBar from '../components/navbar'
-import { useNavigate } from 'react-router-dom'
+} from "@chakra-ui/react";
+import NavBar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos";
+
 export default function CallToActionWithAnnotation() {
-  const navigate=useNavigate();
-  localStorage.setItem('auth',false);
+  const navigate = useNavigate();
+  localStorage.setItem("auth", false);
   return (
     <>
-    <NavBar/>
-    {/* <lottie-player src="https://lottie.host/ec8b677d-c480-424f-b1b4-677e5776837e/uUtev2Ilmu.json" background="#FFFFFF" speed="1" style="width: 300px; height: 300px" direction="1" mode="normal" loop controls autoplay></lottie-player> */}
-      <Container maxW={'3xl'}>
-        <Stack
-          as={Box}
-          textAlign={'center'}
-          spacing={{ base: 8, md: 14 }}
-          py={{ base: 20, md: 36 }}>
-          <Heading
-            fontWeight={600}
-            fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
-            lineHeight={'110%'}>
-           Build your confidence<br />
-           
-            <Text as={'span'} color={'teal.400'}>
-              on interviews by click
-            </Text>
-          </Heading>
-          <Text color={'gray.500'}>
-            
-Personality plays an indispensable role in shaping every facet of our existence. 
-It exerts a profound influence on how we perceive the world, engage with fellow beings, 
-and confront adversities.
-          </Text>
-          <Stack
-            direction={'column'}
-            spacing={3}
-            align={'center'}
-            alignSelf={'center'}
-            position={'relative'}>
-            <Button
-              colorScheme={'teal'}
-              bg={'teal.400'}
-              rounded={'full'}
-              px={6}
-              _hover={{
-                bg: 'teal.500',
-              }}
-              onClick={()=>navigate('/login')}
-              >
-              Get Started
-            </Button>
-            <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
-              Learn more
-            </Button>
-            <Box>
-              <Icon
-                as={Arrow}
-                color={useColorModeValue('gray.800', 'gray.300')}
-                w={71}
-                position={'absolute'}
-                right={-71}
-                top={'10px'}
-              />
-              <Text
-                fontSize={'lg'}
-                fontFamily={'Caveat'}
-                position={'absolute'}
-                right={'-125px'}
-                top={'-15px'}
-                transform={'rotate(10deg)'}>
-                Starting at FREE
-              </Text>
-            </Box>
-          </Stack>
-        </Stack>
-      </Container>
-    </>
-  )
-}
+      <NavBar />
+      <section class="w-full xl:pb-[8.2rem] pt-16  bg-black">
+        <div class="container px-4 md:px-6">
+          <div class="grid gap-6 ">
+            <div class="flex flex-col space-y-8 ">
+              <div className="flex">
+                {/* Gif Section */}
+                <div className="absolute right-[22px] w-auto h-auto text-white">
+                  <img
+                    src="https://media.tenor.com/7LAB1WbMURAAAAAd/website.gif"
+                    alt="GIF"
+                    className="w-full h-auto"
+                  />
+                </div>
 
-const Arrow = createIcon({
-  displayName: 'Arrow',
-  viewBox: '0 0 72 24',
-  path: (
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M0.600904 7.08166C0.764293 6.8879 1.01492 6.79004 1.26654 6.82177C2.83216 7.01918 5.20326 7.24581 7.54543 7.23964C9.92491 7.23338 12.1351 6.98464 13.4704 6.32142C13.84 6.13785 14.2885 6.28805 14.4722 6.65692C14.6559 7.02578 14.5052 7.47362 14.1356 7.6572C12.4625 8.48822 9.94063 8.72541 7.54852 8.7317C5.67514 8.73663 3.79547 8.5985 2.29921 8.44247C2.80955 9.59638 3.50943 10.6396 4.24665 11.7384C4.39435 11.9585 4.54354 12.1809 4.69301 12.4068C5.79543 14.0733 6.88128 15.8995 7.1179 18.2636C7.15893 18.6735 6.85928 19.0393 6.4486 19.0805C6.03792 19.1217 5.67174 18.8227 5.6307 18.4128C5.43271 16.4346 4.52957 14.868 3.4457 13.2296C3.3058 13.0181 3.16221 12.8046 3.01684 12.5885C2.05899 11.1646 1.02372 9.62564 0.457909 7.78069C0.383671 7.53862 0.437515 7.27541 0.600904 7.08166ZM5.52039 10.2248C5.77662 9.90161 6.24663 9.84687 6.57018 10.1025C16.4834 17.9344 29.9158 22.4064 42.0781 21.4773C54.1988 20.5514 65.0339 14.2748 69.9746 0.584299C70.1145 0.196597 70.5427 -0.0046455 70.931 0.134813C71.3193 0.274276 71.5206 0.70162 71.3807 1.08932C66.2105 15.4159 54.8056 22.0014 42.1913 22.965C29.6185 23.9254 15.8207 19.3142 5.64226 11.2727C5.31871 11.0171 5.26415 10.5479 5.52039 10.2248Z"
-      fill="currentColor"
-    />
-  ),
-})
+                <div className="space-y-2 xl:pt-56">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                    Discover Our Unique Features
+                  </h1>
+                  <p className="text-zinc-200 md:text-xl dark:text-zinc-100 mx-auto">
+                    Our features are designed to enhance your productivity and
+                    streamline your workflow.
+                  </p>
+                </div>
+              </div>
+
+              {/* Features Section */}
+              <div class="w-full max-w-full xl:pt-72 space-y-4 mx-auto text-center">
+                <div class="grid grid-cols-3 gap-8" data-aos="zoom-in">
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                    <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                      <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-white h-6 w-6 mb-2 opacity-75"
+                        >
+                          <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                          <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-white">Smart Inbox</h2>
+                      <p class="text-zinc-200 dark:text-zinc-100">
+                        Our Smart Inbox feature helps you manage your emails
+                        efficiently by prioritizing important emails.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                    <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                      <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-white h-6 w-6 mb-2 opacity-75"
+                        >
+                          <path d="m8 6 4-4 4 4"></path>
+                          <path d="M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22"></path>
+                          <path d="m20 22-5-5"></path>
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-white">
+                        Seamless Integration
+                      </h2>
+                      <p class="text-zinc-200 dark:text-zinc-100">
+                        Seamless Integration allows you to connect with your
+                        favorite apps and services without leaving your inbox.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                    <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                      <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-white h-6 w-6 mb-2 opacity-75"
+                        >
+                          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-white">
+                        Advanced Customization
+                      </h2>
+                      <p class="text-zinc-200 dark:text-zinc-100">
+                        With Advanced Customization, you can personalize your
+                        email client to suit your preferences and work style.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                    <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                      <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-white h-6 w-6 mb-2 opacity-75"
+                        >
+                          <circle cx="11" cy="11" r="8"></circle>
+                          <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-white">
+                        Powerful Search
+                      </h2>
+                      <p class="text-zinc-200 dark:text-zinc-100">
+                        Our Powerful Search feature allows you to find any
+                        email, contact, or file in seconds.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                    <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                      <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-white h-6 w-6 mb-2 opacity-75"
+                        >
+                          <rect
+                            width="18"
+                            height="11"
+                            x="3"
+                            y="11"
+                            rx="2"
+                            ry="2"
+                          ></rect>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-white">
+                        Reliable Security
+                      </h2>
+                      <p class="text-zinc-200 dark:text-zinc-100">
+                        With Reliable Security, your data is always safe and
+                        protected.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white bg-opacity-10 rounded-lg shadow-lg p-5 dark:bg-gray-800 backdrop-filter backdrop-blur-lg">
+                  <div class="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+                    <div class="p-2 bg-black bg-opacity-50 rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="text-white h-6 w-6 mb-2 opacity-75"
+                      >
+                        <path d="m8 6 4-4 4 4"></path>
+                        <path d="M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22"></path>
+                        <path d="m20 22-5-5"></path>
+                      </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Easy Access</h2>
+                    <p class="text-zinc-200 dark:text-zinc-100">
+                      Easy Access allows you to share and edit documents with
+                      your team in real time.
+                    </p>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
