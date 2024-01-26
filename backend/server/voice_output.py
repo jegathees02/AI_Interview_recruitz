@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 
 def calculate_clarity():
-    audio_file = "/home/jegathees5555/Documents/recruitz/backend/audio/output.mp3"  # Replace with the path to your audio file
+    audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"  # Replace with the path to your audio file
     
     # Load the audio file
     y, sr = librosa.load(audio_file)
@@ -18,7 +18,7 @@ def calculate_clarity():
     return mean_centroid/25
 
 def calculate_boldness():
-    audio_file = "/home/jegathees5555/Documents/recruitz/backend/audio/output.mp3"  # Replace with the path to your audio file
+    audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"  # Replace with the path to your audio file
     
     # Load the audio file
     y, sr = librosa.load(audio_file)
@@ -34,7 +34,7 @@ def calculate_boldness():
     return mean_contrast*3.2
 
 def voice_quality():
-    audio_file = "/home/jegathees5555/Documents/recruitz/backend/audio/output.mp3"  # Replace with the path to your audio file
+    audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"  # Replace with the path to your audio file
     
     # Load the audio file
     y, sr = librosa.load(audio_file)

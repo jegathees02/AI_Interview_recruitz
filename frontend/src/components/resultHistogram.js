@@ -34,12 +34,15 @@ const App = () => {
   const loadingTexts = ["Processing your video...", "Analyzing your face...", "Analyzing your voice...", "Generating insights..."];
   
   const dataArray = [];
+  // const [data,setData] = useState(null);
 
   useEffect(() => {
     const fetchData =  async () => {
       try {
         const response = await axios.get('http://localhost:5000/get_result');
         // Simulate a loading delay for demonstration purposes
+        setBackend_data(response.data);
+        console.log(response.data);
         setTimeout(() => {
           setLoading(false);
         },12000);
@@ -83,12 +86,30 @@ const App = () => {
   const navigate = useNavigate();
   const getRandomValue = () => Math.floor(Math.random() * 31) + 60;
   const data = [
-    { name: 'Eye-Contact', percentage: getRandomValue() },
-    { name: 'Confidence', percentage: getRandomValue() },
-    { name: 'Clarity', percentage: getRandomValue() },
-    { name: 'Boldness', percentage: getRandomValue() }
+    { name: 'Eye-Contact', percentage: backend_data.eye_contact },
+    { name: 'Confidence', percentage: backend_data.confidence },
+    { name: 'Clarity', percentage: backend_data.clarity },
+    { name: 'Boldness', percentage: backend_data.boldness }
   ];
-  const totalHistogramPercentage = data.reduce((sum, item) => sum + item.percentage, 0);
+  // if(backend_data.eye_contact === 1) {
+  //   const data = [
+  //     { name: 'Eye-Contact', percentage: backend_data.eye_contact },
+  //   { name: 'Confidence', percentage: 1 },
+  //   { name: 'Clarity', percentage: 1 },
+  //   { name: 'Boldness', percentage: 1}
+  //   ]
+  // }
+  // else{
+  //   const data = [
+  //     { name: 'Eye-Contact', percentage: backend_data.eye_contact },
+  //     { name: 'Confidence', percentage: backend_data.confidence },
+  //     { name: 'Clarity', percentage: backend_data.clarity },
+  //     { name: 'Boldness', percentage: backend_data.boldness }
+  //   ];
+  // }
+  // const totalHistogramPercentage = data.reduce((sum, item) => sum + item.percentage, 0);
+  const totalHistogramPercentages = data.reduce((sum, item) => sum + item.percentage, 0);
+  const totalHistogramPercentage = Math.round(totalHistogramPercentages);
   var score = totalHistogramPercentage / data.length;
   const scorechart = [
     { name: 'Success', percentage: score },
