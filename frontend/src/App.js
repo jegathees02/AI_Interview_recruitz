@@ -11,6 +11,7 @@ import Feedbackuser from './components/feedbackuser';
 import Userdetails from './components/userdetails';
 import Dashboard from './components/dashboard';
 import Course from './components/courses';
+import TopRatedCourseView from './components/TopRatedCourseView';
 function App() {
   return (
     <div>
@@ -25,6 +26,7 @@ function App() {
         <Route path='/edit' element={<Edit/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
         <Route path='/courses' element={<Course/>} />
+        <Route path="/top-rated-courses/:id" element={<TopRatedCourseView />} />
         <Route path='/feedbackuser' element={<Feedbackuser/>} />
         <Route path='/userdetails' element={<Userdetails/>} />
       </Routes>

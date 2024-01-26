@@ -79,7 +79,9 @@ const CourseCompletionCard = () => {
           </Stack>
         </Card>
       </div>
+      
     </div>
+    
   );
 };
 
