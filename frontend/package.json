@@ -16,7 +16,11 @@
     "axios": "^1.6.5",
     "chart.js": "^4.3.3",
     "framer-motion": "^10.15.2",
+<<<<<<< HEAD
     "lottie-web": "^5.12.2",
+=======
+    "openai": "^4.26.0",
+>>>>>>> 41c404508f58d327b979d92f52a34dc12a2c3fea
     "owl.carousel": "^2.3.4",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
