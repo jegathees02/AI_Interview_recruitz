@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import './chatgpt';
 import Webcam from 'react-webcam';
 import { FaVideo ,FaCircle,FaExpand,FaArrowRight} from 'react-icons/fa';
 import NavBar from '../components/navbar';
@@ -22,6 +23,7 @@ const CameraApp = () => {
   const Navigate=useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bgColor = useColorModeValue('gray.100', 'gray.700');
+  const [gptquestions, setGptQuestions] = useState([]);
   const [showComponent, setShowComponent] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -40,6 +42,7 @@ const CameraApp = () => {
     setIsFullScreen(!isFullScreen);
   };
 
+  // const gptquestions = ['hai','hello'];
   useEffect(() => {
     const delay = setTimeout(() => {
       setShowComponent(true);
@@ -48,6 +51,33 @@ const CameraApp = () => {
     return () => {
       clearTimeout(delay);
     };
+  }, []);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/generate-questions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Update the gptquestions array in your frontend
+        setGptQuestions(data.questions.map((question, index) => ({ name: `Question ${index + 1}`, content: question, duration: 'Unknown' })));
+      } catch (error) {
+        console.error('API error:', error);
+      }
+    };
+
+    fetchQuestions();
   }, []);
 
   useEffect(() => {
@@ -172,34 +202,33 @@ const CameraApp = () => {
       {/* <Text fontFamily={'cursive'} fontSize={'2xl'} width={'100%'} align={'center'} p={2}>Recruitz: Discover Your Inner Self  .!</Text> */}
       <div bg={bgColor} style={{display:'flex'}}>
         
-      <div style={{marginLeft:"4%",width:'22%',alignItems:'center',justifyContent:'center',boxShadow:'0px 0px 5px 0px rgba(0, 0, 0, 0.3)',borderRadius:10, width: '100%',
-        maxWidth: '350px',backgroundColor:'#edf2f7'}}>
-          <Center>
-          <div style={{marginTop:"30%"}} >
-        {/* <Text fontFamily={'cursive'} fontSize={'20px'} width={'100%'} align={'left'}  p={2}>Tell about yourself{'(1-2) mins'}</Text> */}
-        <Text fontWeight="bold" fontSize="1.2rem" marginBottom="0.5rem">
-              Intoduction :
-            </Text>
-            <Text fontSize="1rem" marginBottom="1.5rem">
-              Tell about yourself{'(1-3) mins'}
-            </Text>
-        <Text fontWeight="bold" fontSize="1.2rem" marginBottom="0.5rem">
-              Projects : 
-            </Text>
-            <Text fontSize="1rem" marginBottom="1.5rem">
-              Tell about your projects{'(2-3) mins'}
-            </Text>
-          
-            <Text fontWeight="bold" fontSize="1.2rem" marginBottom="0.5rem">
-            Academics : 
-            </Text>
-            <Text fontSize="1rem" marginBottom="1.5rem">
-            Tell about your academics{'(2-4) mins'}
-            </Text>
+      <div style={{
+  marginLeft: "4%",
+  width: '22%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.3)',
+  borderRadius: 10,
+  width: '100%',
+  maxWidth: '350px',
+  backgroundColor: '#edf2f7'
+}}>
+  <Center>
+    <div style={{ marginTop: "30%" }}>
+      {gptquestions.map((item, index) => (
+        <div key={index} style={{ marginBottom: '1.5rem' }}>
+          <Text fontWeight="bold" fontSize="1.2rem" marginBottom="0.5rem">
+            {item.name}:
+          </Text>
+          <Text fontSize="1rem">
+            {item.content}{'(' + item.duration + ' mins)'}
+          </Text>
+        </div>
+      ))}
+    </div>
+  </Center>
+</div>
 
-            </div>
-            </Center>
-      </div>
             
       <Box  bg={bgColor}style={{
         position: 'relative',
