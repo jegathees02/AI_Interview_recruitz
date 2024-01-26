@@ -26,15 +26,15 @@ import {
 // var con = 0;
 // var cl = 0;
 
+
+
 const App = () => {
+  const [backend_data, setBackend_data] = useState([{}]);
   const [output_data,setOutput_data] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [backend_data, setBackend_data] = useState([{}]);
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const loadingTexts = ["Processing your video...", "Analyzing your face...", "Analyzing your voice...", "Generating insights..."];
-  
-  const dataArray = [];
-  // const [data,setData] = useState(null);
+
 
   useEffect(() => {
     const fetchData =  async () => {
@@ -42,6 +42,10 @@ const App = () => {
         const response = await axios.get('http://localhost:5000/get_result');
         // Simulate a loading delay for demonstration purposes
         setBackend_data(response.data);
+        localStorage.setItem('eye', JSON.stringify(response.data.eye_contact));
+        localStorage.setItem('conf',JSON.stringify(response.data.confidence));
+        localStorage.setItem('clarity',JSON.stringify(response.data.clarity));
+        localStorage.setItem('boldness',JSON.stringify(response.data.boldness));
         console.log(response.data);
         setTimeout(() => {
           setLoading(false);
@@ -115,29 +119,6 @@ const App = () => {
     { name: 'Success', percentage: score },
     { name: 'Failure', percentage: 100 - score }
   ];
-// Extract values from backend_data
-//  ec = backend_data.eye_contact;
-//  bold = backend_data.boldness;
-//  cl = backend_data.clarity;
-//  con = backend_data.confidence;
-// console.log(ec)
-
-// // Store the values in localStorage
-// localStorage.setItem('eye_contact', JSON.stringify(ec));
-// localStorage.setItem('boldness', JSON.stringify(bold));
-// localStorage.setItem('clarity', JSON.stringify(cl));
-// localStorage.setItem('confidence', JSON.stringify(con));
-
-// Retrieve the values from localStorage
-// const storedEyeContact = JSON.parse(localStorage.getItem('eye_contact'));
-// const storedBoldness = JSON.parse(localStorage.getItem('boldness'));
-// const storedClarity = JSON.parse(localStorage.getItem('clarity'));
-// const storedConfidence = JSON.parse(localStorage.getItem('confidence'));
-
-// console.log(storedEyeContact);   // Should output 80
-// console.log(storedBoldness);      // Should output 70
-// console.log(storedClarity);       // Should output "Good"
-// console.log(storedConfidence);    // Should output 90
   const totalPercentage = scorechart.reduce((sum, item) => sum + item.percentage, 0);
   const isSuccess = score >= 50;
   var bgColor = useColorModeValue('#4682B4', '#2C3863');
@@ -155,6 +136,8 @@ const App = () => {
   
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  // localStorage.setItem(backend_data,backend_data);
+
 
   return (
     <>
@@ -337,75 +320,87 @@ const TypingAnimation = ({ children }) => {
 
 
 const SuggestionsModal = ({ isOpen, onClose }) => {
-  // var conf = con;
-  // var confidence_str;
-  // var clarity_str = '';
-  // var eyecontact_str = '';
-  // var boldness_str = '';
-  // switch(conf) {
-  //   case conf > 90 : 
-  //   confidence_str = 'Optimal eye contact is achieved when you confidently maintain eye contact throughout the interview, with occasional breaks to ensure the conversation remains comfortable. This level of engagement underscores your authenticity and the depth of your interpersonal skills. By actively listening, responding with conviction, and connecting with the interviewer, you create a lasting impression that can greatly influence the outcome of the interview.';
-  //   break;
-  //   case conf > 80 : 
-  //   confidence_str = "As you approach near-constant eye contact, you convey your dedication and genuine interest in the role. Show your enthusiasm by actively listening and responding with thoughtful insights. Use eye contact to underscore how your experiences align with the company's goals and to make a memorable impact on the interviewer.";
-  //   break;
-  //   case conf > 70 : 
-  //   confidence_str = "Maintaining strong eye contact indicates that you're a focused and capable communicator. During the interview, keep your gaze fixed on the interviewer while occasionally glancing away to avoid appearing overly intense. This balance highlights your interpersonal skills and reinforces your suitability for the role.";
-  //   break;
-  //   case conf > 60 : 
-  //   confidence_str = "Reaching this stage demonstrates a high level of confidence and involvement in the conversation. As you discuss specific examples of your work experience that align with the company's requirements, maintain consistent eye contact. This approach solidifies your credibility and showcases how you can contribute effectively to the team.";
-  //   break;
-  //   case conf > 50 : 
-  //   confidence_str = "Strive for a well-rounded approach to eye contact, alternating between the interviewer's eyes and their facial expressions. This approach lets you connect on a personal level while conveying professionalism. Use this level of engagement to emphasize your motivations for joining the company and your understanding of its values and goals.";
-  //   break;
-  //   case conf > 40 : 
-  //   confidence_str = "Balancing your eye contact during the conversation is crucial. Maintaining eye contact while discussing various topics shows that you are not only confident but also genuinely interested in the company and the opportunity. Remember, effective eye contact is a two-way interaction—it helps you gauge the interviewer's reactions and allows them to see your enthusiasm and passion.";
-  //   break;
-  //   case conf > 30 : 
-  //   confidence_str = "At this stage, consistent but moderate eye contact indicates that you are actively engaged in the interview. When discussing your accomplishments, skills, and how they align with the position, maintain eye contact with the interviewer. This level of connection demonstrates your genuine interest in the role and your potential contributions to the company.";
-  //   break;
-  //   case conf > 20 : 
-  //   confidence_str = "Advancing to this level signifies a growing comfort with eye contact. During key moments of the interview—such as explaining your relevant skills or sharing anecdotes from your work history—maintain eye contact to emphasize your points. This not only showcases your confidence but also helps the interviewer remember your responses more effectively.";
-  //   break;
-  //   case conf > 10 : 
-  //   confidence_str = "As you progress from minimal eye contact, start focusing on increasing the duration. During moments when you're discussing your qualifications and experiences, make a conscious effort to maintain eye contact. This communicates your attentiveness and willingness to actively participate in the interview. Remember, eye contact is not just about looking at someone; it's about showing that you're truly present and interested in the interaction.";
-  //   break;
-  //   case conf >= 0 : 
-  //   confidence_str = "Limited eye contact during an interview can unintentionally send negative signals. It might indicate a lack of interest, shyness, or nervousness, which could impact your chances of leaving a positive impression. To improve your initial eye contact, practice maintaining eye contact for a few seconds when introducing yourself or during greetings. By doing so, you demonstrate that you are engaged in the conversation and convey a level of confidence.";
-  //   break;
-  // }
-  // switch(bold) {
-  //   case bold > 90 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 80 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 70 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 60 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 50 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 40 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 30 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 20 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 10 :
-  //     boldness_str = "";
-  //     break;
-  //     case bold > 0 :
-  //     boldness_str = "";
-  //     break;
-  // }
+  let backend_data = [];
+  backend_data = localStorage.getItem(backend_data);
+  const [eyeSuggestion,setEyeSuggestion] = useState("");
+  const [claritySuggestion,setClaritySuggestion] = useState("");
+  const [boldenessSuggestion,setBoldnessSuggestion] = useState("");
+  const [confidenceSuggeston,setConfidenceSuggestion] = useState("");
+  var eye = localStorage.getItem(eye);
+  var conf = localStorage.getItem(conf);
+  // let bold = localStorage.getItem(boldness);
+  let bold = 20;  
+  console.log(bold);
+  // let bold = 20;
+  var clarity = localStorage.getItem(clarity);
+  var confidence_str;
+  var clarity_str = '';
+  var eyecontact_str = '';
+  var boldness_str = '';
+  switch(eye) {
+    case eye > 90 : 
+    setEyeSuggestion('Optimal eye contact is achieved when you confidently maintain eye contact throughout the interview, with occasional breaks to ensure the conversation remains comfortable. This level of engagement underscores your authenticity and the depth of your interpersonal skills. By actively listening, responding with conviction, and connecting with the interviewer, you create a lasting impression that can greatly influence the outcome of the interview.');
+    break;
+    case eye > 80 : 
+    setEyeSuggestion("As you approach near-constant eye contact, you convey your dedication and genuine interest in the role. Show your enthusiasm by actively listening and responding with thoughtful insights. Use eye contact to underscore how your experiences align with the company's goals and to make a memorable impact on the interviewer.");
+    break;
+    case eye > 70 : 
+    setEyeSuggestion("Maintaining strong eye contact indicates that you're a focused and capable communicator. During the interview, keep your gaze fixed on the interviewer while occasionally glancing away to avoid appearing overly intense. This balance highlights your interpersonal skills and reinforces your suitability for the role.");
+    break;
+    case eye > 60 : 
+    setEyeSuggestion("Reaching this stage demonstrates a high level of confidence and involvement in the conversation. As you discuss specific examples of your work experience that align with the company's requirements, maintain consistent eye contact. This approach solidifies your credibility and showcases how you can contribute effectively to the team.");
+    break;
+    case eye > 50 : 
+    setEyeSuggestion("Strive for a well-rounded approach to eye contact, alternating between the interviewer's eyes and their facial expressions. This approach lets you connect on a personal level while conveying professionalism. Use this level of engagement to emphasize your motivations for joining the company and your understanding of its values and goals.");
+    break;
+    case eye > 40 : 
+    setEyeSuggestion("Balancing your eye contact during the conversation is crucial. Maintaining eye contact while discussing various topics shows that you are not only confident but also genuinely interested in the company and the opportunity. Remember, effective eye contact is a two-way interaction—it helps you gauge the interviewer's reactions and allows them to see your enthusiasm and passion.");
+    break;
+    case eye > 30 : 
+    setEyeSuggestion("At this stage, consistent but moderate eye contact indicates that you are actively engaged in the interview. When discussing your accomplishments, skills, and how they align with the position, maintain eye contact with the interviewer. This level of connection demonstrates your genuine interest in the role and your potential contributions to the company.");
+    break;
+    case eye > 20 : 
+    setEyeSuggestion("Advancing to this level signifies a growing comfort with eye contact. During key moments of the interview—such as explaining your relevant skills or sharing anecdotes from your work history—maintain eye contact to emphasize your points. This not only showcases your confidence but also helps the interviewer remember your responses more effectively.");
+    break;
+    case eye > 10 : 
+    setEyeSuggestion("As you progress from minimal eye contact, start focusing on increasing the duration. During moments when you're discussing your qualifications and experiences, make a conscious effort to maintain eye contact. This communicates your attentiveness and willingness to actively participate in the interview. Remember, eye contact is not just about looking at someone; it's about showing that you're truly present and interested in the interaction.");
+    break;
+    case eye >= 0 : 
+    setEyeSuggestion("Limited eye contact during an interview can unintentionally send negative signals. It might indicate a lack of interest, shyness, or nervousness, which could impact your chances of leaving a positive impression. To improve your initial eye contact, practice maintaining eye contact for a few seconds when introducing yourself or during greetings. By doing so, you demonstrate that you are engaged in the conversation and convey a level of confidence.");
+    break;
+  }
+  switch(bold) {
+    case bold > 90 :
+      boldness_str = "";
+      break;
+      case bold > 80 :
+      boldness_str = "";
+      break;
+      case bold > 70 :
+      boldness_str = "";
+      break;
+      case bold > 60 :
+      boldness_str = "";
+      break;
+      case bold > 50 :
+      boldness_str = "";
+      break;
+      case bold > 40 :
+      boldness_str = "";
+      break;
+      case bold > 30 :
+      boldness_str = "";
+      break;
+      case bold > 20 :
+      boldness_str = "";
+      break;
+      case bold > 10 :
+      boldness_str = "";
+      break;
+      case bold > 0 :
+      boldness_str = "";
+      break;
+  }
   // console.log(confidence_str);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -417,8 +412,11 @@ const SuggestionsModal = ({ isOpen, onClose }) => {
           <Heading size={'sm'} color={'blackAlpha.800'}>
             Eye Contact
           </Heading>
-          <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation>
-          {/* <TypingAnimation>{eyecontact_str}</TypingAnimation> */}
+          {/* <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation> */}
+          {/* <TypingAnimation>{eyeSuggestion}</TypingAnimation>  */}
+          {/* <Text>Eye</Text> */}
+          {/* <Text>{eyeSuggestion}</Text> */}
+          <h1>{eyeSuggestion}</h1>
           <br />
           <br/>
           <Heading size={'sm'} color={'blackAlpha.800'}>
@@ -433,7 +431,7 @@ const SuggestionsModal = ({ isOpen, onClose }) => {
           <br />
           <br/>
           <Heading size={'sm'} color={'blackAlpha.800'}>
-            Eye Contact
+            Boldness
           </Heading>
           <TypingAnimation>When engaging in a conversation, make an effort to maintain steady eye contact with the person you are speaking to. This shows that you are actively engaged and interested in the conversation. Avoid looking around too much or letting your gaze wander.</TypingAnimation>
           <br />
