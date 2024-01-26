@@ -5,6 +5,10 @@ import NavBar from "../components/navbar";
 import ApexChart from "../Charts/linechart";
 import ApexCharts from "apexcharts";
 import ReactApexChart from "react-apexcharts";
+import { Player } from "@lordicon/react";
+import coin from "../assets/wired-lineal-298-coins.gif";
+import rank from "../assets/wired-flat-153-bar-chart.gif";
+import profile from "../assets/wired-outline-261-emoji-smile.gif"
 const Dashboard = () => {
   const generateData = (count, range) => {
     const data = [];
@@ -29,10 +33,16 @@ const Dashboard = () => {
     },
     stroke: {
       curve: "straight",
+      
+        colors: ["#14b8a6"],  
+      
     },
     title: {
-      text: "Product Trends by Month",
-      align: "left",
+      text: "Solution",
+      align: "center",
+      style: {
+        color: "#0f766e", // Set the title color here
+      },  
     },
     grid: {
       row: {
@@ -56,6 +66,55 @@ const Dashboard = () => {
   });
 
   const [series, setSeries] = useState([
+    {
+      name: "Desktops",
+      data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+    },
+  ]);
+  const [optionsA, setOptionsA] = useState({
+    chart: {
+      height: 350,
+      type: "line",
+      zoom: {
+        enabled: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "straight",
+      colors: ["#14b8a6"], 
+    },
+    title: {
+      text: "Overall Percentage",
+      align: "center",
+      style: {
+        color: "#0f766e", // Set the title color here
+      },
+    },
+    grid: {
+      row: {
+        colors: ["#f3f3f3", "transparent"],
+        opacity: 0.9,
+      },
+    },
+    xaxis: {
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+      ],
+    },
+  });
+
+  const [seriesA, setSeriesA] = useState([
     {
       name: "Desktops",
       data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
@@ -91,55 +150,73 @@ const Dashboard = () => {
     <div>
       <>
         <NavBar />
-        <div className="w-[calc(100%-72px)] h-[260px] sm:h-[160px] bg-black mx-auto mt-[8px] rounded-lg border border-borders">
+        <div className="w-[calc(100%-72px)] h-[260px] sm:h-[160px] bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
           <div id="main" className="flex flex-col sm:flex-row h-fit">
             <div id="porfile-pic">
-              <div className="w-[80px] h-[80px] mt-[40px] border border-borders sm:ml-[50px] mx-auto rounded-lg"></div>
+              <div className="w-[80px] h-[80px] mt-[40px] border border-borders sm:ml-[50px] mx-auto rounded-lg  items-center justify-center flex">
+              <img src={profile} alt="logo" className="w-12" />
+              </div>
             </div>
             <div className="flex flex-col w-[280px] text-center sm:text-left mx-auto sm:ml-0">
               <div
                 id="username"
-                className="text-[28px] font-bold mt-[20px] sm:mt-[40px] text-white sm:ml-[30px] ml-0"
+                className="text-[28px] font-bold mt-[20px] sm:mt-[40px] text-teal-500 sm:ml-[30px] ml-0"
               >
                 Sanjeevi
               </div>
               <div
                 id="username"
-                className="text-[18px] mt-[6px] text-text_2 sm:ml-[30px] ml-0 text-white"
+                className="text-[18px] mt-[6px] text-text_2 sm:ml-[30px] ml-0 text-black"
               >
                 Rank: 9090
               </div>
             </div>
-            <div className="md:flex hidden flex-row absolute right-[90px]">
-              <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px] rounded-lg relative">
-                <i className="bi bi-x-lg text-borders absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"></i>
+            <div className="md:flex hidden flex-row absolute right-[90px] mt-[1.6rem]">
+            <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
+                <img src={coin} alt="logo" className="w-12" />
+                <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
+                  986
+                </i>
               </div>
-              <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px] rounded-lg relative">
-                <i className="bi bi-x-lg text-borders absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"></i>
+              <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
+                <img src={rank} alt="logo" className="w-12" />
+                <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
+                  986
+                </i>
               </div>
-              <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px] rounded-lg relative">
-                <i className="bi bi-x-lg text-borders absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"></i>
+              <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
+                <img src={coin} alt="logo" className="w-12" />
+                <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
+                  986
+                </i>
               </div>
             </div>
           </div>
         </div>
 
         <div className="flex lg:flex-row sm:flex-col flex-col w-[calc(100%-72px)] mx-auto gap-4 justify-between">
-          <div className="lg:w-[358px] sm:w-full h-[506px] bg-black mt-[8px] rounded-lg border border-borders">
-            <div className="text-[22px] font-bold mt-[40px] text-white ml-[50px]">
+          <div className="lg:w-[358px] sm:w-full h-[506px] bg-gray-200 mt-[8px] rounded-lg border border-borders">
+            <div className="text-[22px] font-bold mt-[40px] text-teal-500 ml-[50px]">
               Community Stats
             </div>
             <div className="mt-[18px] text-[14px] ml-[50px]  text-white">
-              <span className="text-text_2  text-white">Views:</span> 679
+              <span className="text-text_2 font-bold  text-black">Views:</span>{" "}
+              <span className="text-text_2 font-bold text-teal-700">679</span>
             </div>
             <div className="mt-[18px] text-[14px] ml-[50px]  text-white">
-              <span className="text-text_2  text-white">Solutions:</span> 908
+              <span className="text-text_2 font-bold text-black">
+                Solutions:
+              </span>{" "}
+              <span className="text-text_2 font-bold text-teal-700">709</span>
             </div>
             <div className="mt-[18px] text-[14px] ml-[50px] mb-[40px]  text-white">
-              <span className="text-text_2  text-white">Reputation:</span> 789
+              <span className="text-text_2 font-bold text-black">
+                Reputation:
+              </span>{" "}
+              <span className="text-text_2 font-bold text-teal-700">798</span>
             </div>
           </div>
-          <div className="lg:w-full sm:w-full sm: h-[506px] h-[506px] bg-white mt-[8px] rounded-lg border border-borders relative">
+          <div className="lg:w-full sm:w-full sm: h-[506px] h-[506px] bg-gray-200 mt-[8px] rounded-lg border border-borders relative">
             <div className="flex sm:flex-row flex-col ml-[30px]">
               <div className="flex flex-col relative mr-[50px] mt-[40px] w-[200px] sm:w-[280px] ml-[50px] sm:ml-0">
                 <div id="chart">
@@ -156,8 +233,8 @@ const Dashboard = () => {
                 <div className="text-black mt-1 ml-[17.5rem]">
                   <div id="chart">
                     <ReactApexChart
-                      options={options}
-                      series={series}
+                      options={optionsA}
+                      series={seriesA}
                       type="area"
                       height={450}
                       width={450}
@@ -169,27 +246,27 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Table */}
-        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-100 mx-auto mt-[8px] rounded-lg border border-borders">
+        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
           <table class="w-full caption-bottom text-sm">
-            <thead class="[&amp;_tr]:border-b">
+            <thead class="[&amp;_tr]:border-b text-teal-500 font-bold">
               <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
+                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
                   Name
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                   Status
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                   Inventory
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Vendor
                 </th>
               </tr>
             </thead>
             <tbody class="[&amp;_tr:last-child]:border-0">
               <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium ">
                   Glimmer Lamps
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
@@ -262,7 +339,7 @@ const Dashboard = () => {
           </table>
         </div>
         {/* Heat Map */}
-        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-black-100 mx-auto mt-[8px] rounded-lg border border-borders">
+        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
           <div id="chart">
             <ReactApexChart
               options={chartData.options}
