@@ -53,7 +53,7 @@ const App = () => {
 
         if (allValuesAreOne) {
           // Set the state to show the retake modal
-          setShowRetakeModal(true);
+          // setShowRetakeModal(true);
         } else {
           // Update the state if values are not all 1
           setBackend_data(response.data);

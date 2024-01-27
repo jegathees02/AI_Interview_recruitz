@@ -12,13 +12,13 @@ import cv2
 import numpy as np
 from flask import jsonify
 from tensorflow.keras.models import load_model
-
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)
 
 
-UPLOAD_FOLDER = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/'
+UPLOAD_FOLDER = 'D:\CLG\AI_Interview_recruitz\backend\server'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def upload_video(video_data):        
@@ -43,17 +43,16 @@ def extract_audio(input_file, output_file):
     command = [
         "ffmpeg",
         "-i", input_file,
-        "-y",  # Overwrite output files
-        output_file
+        "-y", output_file,
     ]
     
     subprocess.run(command)
 
-def voice_extraction_main():
-    input_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm"  # Replace with the path to your WebM file
-    output_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"  # Replace with the desired name for the output MP3 file
+    def voice_extraction_main():
+        input_file = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "uploaded_video.webm")
+        output_file = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "output.mp3")  # Replace with the desired name for the output MP3 file
 
-    extract_audio(input_file, output_file)
+        extract_audio(input_file, output_file)
     
 
 
@@ -62,8 +61,8 @@ def voice_extraction_main():
 def eye_tracking_method(video_path):
     # eye_detector = cv2.CascadeClassifier("/home/jegathees5555/Documents/recruitz/backend/eye_track/haarcascade_eye.xml")
     cascade_classifiers = [
-        cv2.CascadeClassifier("/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/haarcascade_eye.xml"),
-        cv2.CascadeClassifier("/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/haarcascade_frontalface_default.xml")
+        cv2.CascadeClassifier("D:\CLG\AI_Interview_recruitz\backend\server\haarcascade_eye.xml"),
+        cv2.CascadeClassifier("D:\CLG\AI_Interview_recruitz\backend\server\haarcascade_frontalface_default.xml")
         # Add your second Haar Cascade classifier here if needed
     ]
 
@@ -127,7 +126,7 @@ def classify_emotion(predictions):
 def check_happiness(video_path):
     try:
         cap = cv2.VideoCapture(video_path)
-        emotion_model = load_model('/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/imageclassifier.h5')
+        emotion_model = load_model(os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "imageclassifier.h5"))
 
         # Check if the camera is opened successfully
         if not cap.isOpened():
@@ -214,7 +213,7 @@ def check_happiness(video_path):
 
 def calculate_clarity():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"
+        audio_file = "D:\CLG\AI_Interview_recruitz\backend\server\output.mp3"
 
         # Load the audio file
         y, sr = librosa.load(audio_file)
@@ -240,7 +239,7 @@ def calculate_clarity():
 
 def calculate_boldness():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"
+        audio_file = "D:\CLG\AI_Interview_recruitz\backend\server\output.mp3"
 
         # Load the audio file
         y, sr = librosa.load(audio_file)
@@ -288,7 +287,7 @@ def upload_frontend_video():
 @app.route('/get_result', methods=['GET'])
 def getResult():
     try:
-        video_path = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm'
+        video_path = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "uploaded_video.webm")
         eye_contact = check_happiness(video_path)
         eye_contact = round(eye_contact,2)
         if(eye_contact == 1) :
@@ -319,6 +318,6 @@ def getResult():
 
 if __name__ == '__main__':
     # Set up ngrok and expose the Flask app
-    ngrok_tunnel = ngrok.connect(5000)
+    ngrok_tunnel = ngrok.connect(5001)
     print('Public URL:', ngrok_tunnel.public_url)
-    app.run(host='localhost', port=5000)
+    app.run(host='localhost', port=5001)

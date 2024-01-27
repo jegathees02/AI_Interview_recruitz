@@ -160,7 +160,7 @@ const CameraApp = () => {
         const formData = new FormData();
         formData.append('videoData', videoBlob);
 
-      const response = await fetch('http://localhost:5000/upload_video_new', {
+      const response = await fetch('http://localhost:5001/upload_video_new', {
             method: 'POST',
             body: formData,
         });

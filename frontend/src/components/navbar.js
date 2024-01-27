@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/depression.png';
 import { Link } from 'react-router-dom';
-
+import profile from '../assets/undraw_pic_profile_re_7g2h.svg';
 import {
   Box,
   Flex,
@@ -30,7 +30,7 @@ interface Props {
 const Links = [
   { label: 'Home', path: '/' },
   { label: 'Courses', path: '/courses' },
-  { label: 'Interview', path: '/feedbackuser' },
+  { label: 'Interview', path: '/camera' },
 ];
 const Links1 = ['HOME', 'COURSES', 'Feedback','SignUp','Login'];
 const NavLink = (props: Props) => {
@@ -130,7 +130,7 @@ const navigate=useNavigate();
               >
                 <Avatar
                   size={'sm'}
-                  src={'https://avatars.dicebear.com/api/male/username.svg'}
+                  src={profile}
                 />
               </MenuButton>
               <MenuList alignItems={'center'}>
@@ -138,12 +138,12 @@ const navigate=useNavigate();
                 <Box textAlign="center">
                   <Avatar
                     size={'2xl'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
+                    src={profile}
                   />
                 </Box>
                 <br />
                 <Center>
-                  <Text>Sanjeevi</Text>
+                  <Text>Sample Text</Text>
                 </Center>
                 <br />
                 <MenuDivider />
