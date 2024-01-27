@@ -39,7 +39,7 @@ const App = () => {
   useEffect(() => {
     const fetchData =  async () => {
       try {
-        const response = await axios.get('http://localhost:5000/get_result');
+        const response = await axios.get('http://localhost:5001/get_result');
         // Simulate a loading delay for demonstration purposes
         setBackend_data(response.data);
         localStorage.setItem('eye', JSON.stringify(response.data.eye_contact));
@@ -47,9 +47,9 @@ const App = () => {
         localStorage.setItem('clarity',JSON.stringify(response.data.clarity));
         localStorage.setItem('boldness',JSON.stringify(response.data.boldness));
         console.log(response.data);
-        setTimeout(() => {
+        // setTimeout(() => {
           setLoading(false);
-        },12000);
+        // },12000);
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);

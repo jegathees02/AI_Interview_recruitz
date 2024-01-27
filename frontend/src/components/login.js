@@ -58,6 +58,7 @@ export default function App() {
     .then((response) => {
       console.log(response);
       localStorage.setItem('auth',true);
+      localStorage.setItem('userEmail', userData.email);
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
