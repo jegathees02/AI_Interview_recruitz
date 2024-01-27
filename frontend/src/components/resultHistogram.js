@@ -6,7 +6,7 @@ import NavBar from '../components/navbar';
 import '../styles/result.css'; // Import the CSS file for styling
 import { ArrowBackIcon ,ArrowForwardIcon} from '@chakra-ui/icons';
 import { FcIdea } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Modal,
   ModalOverlay,
@@ -47,12 +47,12 @@ const App = () => {
       try {
         const response = await axios.get('http://localhost:5001/get_result');
 
-        const allValuesAreOne = Object.values(response.data).every(
-          (value) => value === 1
-        );
-
-        if (allValuesAreOne) {
-          // Set the state to show the retake modal
+        // const allValuesAreOne = Object.values(response.data).every(
+        //   (value) => value === 1
+        // );
+        
+        if(response.data.eye_contact === 1 && response.data.confidence === 1 && response.data.clarity === 1 && response.data.boldness == 1) {
+          setLoading(false);
           setShowRetakeModal(true);
         } else {
           // Update the state if values are not all 1
@@ -60,15 +60,12 @@ const App = () => {
           localStorage.setItem('eye', JSON.stringify(response.data.eye_contact));
           localStorage.setItem('conf', JSON.stringify(response.data.confidence));
           localStorage.setItem('clarity', JSON.stringify(response.data.clarity));
-          localStorage.setItem(
-            'boldness',
-            JSON.stringify(response.data.boldness)
-          );
-          console.log(response.data);
+          localStorage.setItem('boldness',JSON.stringify(response.data.boldness));
+          console.log('response',response.data);
 
-          setTimeout(() => {
+          // setTimeout(() => {
             setLoading(false);
-          }, 12000);
+          // }, 12000);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -79,14 +76,12 @@ const App = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingTexts.length);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if(response.data.eye_contact === 1 && response.data.confidence === 1 && response.data.clarity === 1 && response.data.boldness == 1) {
+  //     setLoading(false);
+  //     setShowRetakeModal(true);
+  //   }
+  // }, []);
   // var bgColor = useColorModeValue('','');
   // var bgColor1 = useColorModeValue('#33b894', 'teal');
   // const totalHistogramPercentage = data.reduce((sum, item) => sum + item.percentage, 0);
@@ -107,7 +102,7 @@ const App = () => {
     backend_data.confidence = 96;
   }
   const navigate = useNavigate();
-  const getRandomValue = () => Math.floor(Math.random() * 31) + 60;
+  // const getRandomValue = () => Math.floor(Math.random() * 31) + 60;
   const data = [
     { name: 'Eye-Contact', percentage: backend_data.eye_contact },
     { name: 'Confidence', percentage: backend_data.confidence },
@@ -193,8 +188,8 @@ const App = () => {
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
-                  <Button colorScheme="teal" onClick={() => setShowRetakeModal(false)}>
-                    Close
+                  <Button colorScheme="teal" onClick={() => navigate('/camera')}>
+                    Retake
                   </Button>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -208,7 +203,7 @@ const App = () => {
                 <ArrowBackIcon /> Back
               </Button>
               <Button variant={'outline'} borderColor={'teal'} marginLeft={"80%"} marginTop={5} onClick={() => navigate('/feedback')}>
-                Feedback <ArrowForwardIcon /> 
+                Get From AI <ArrowForwardIcon /> 
               </Button>
             </Box>
         <div className="main-container">

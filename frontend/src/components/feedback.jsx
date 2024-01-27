@@ -40,68 +40,68 @@ export default function Feedback() {
   const [claritySuggestion, setClaritySuggestion] = useState('');
   const [boldnessSuggestion, setBoldnessSuggestion] = useState('');
 
+  const eye_contact = localStorage.getItem('eye');
+  const confidence = localStorage.getItem('conf');
+  const clarity = localStorage.getItem('clarity');
+  const boldness = localStorage.getItem('boldness');
+
   const bgcolor=useColorModeValue('white', 'gray.800');
   const navigate = useNavigate();
-  useEffect(() => {
-    const loaderTimeout = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-        // Make API calls for suggestions based on scores
-        const fetchSuggestions = async () => {
-          try {
-            const eyeContactResponse = await fetchSuggestionFromOpenAI(eyeContactScore);
-            setEyeContactSuggestion(eyeContactResponse);
-    
-            const confidenceResponse = await fetchSuggestionFromOpenAI(confidenceScore);
-            setConfidenceSuggestion(confidenceResponse);
-    
-            const clarityResponse = await fetchSuggestionFromOpenAI(clarityScore);
-            setClaritySuggestion(clarityResponse);
-    
-            const boldnessResponse = await fetchSuggestionFromOpenAI(boldnessScore);
-            setBoldnessSuggestion(boldnessResponse);
-          } catch (error) {
-            console.error('Error fetching suggestions:', error);
-          }
-        };
-    
-        fetchSuggestions();
-
-    return () => clearTimeout(loaderTimeout);
-  }, []);
-
-  const fetchSuggestionFromOpenAI = async (score) => {
-    try {
-      // Replace 'YOUR_API_KEY' with your actual OpenAI GPT-3 API key
-      const apiKey = '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';
-      const apiUrl = 'https://api.openai.com/v1/completions'; // Replace with the actual endpoint
   
-      const response = await fetch(apiUrl, {
+
+  const fetchSuggestionFromOpenAI = async (scoreType, currentScore) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/generate-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          prompt: `Improve the score to achieve ${score}.`,
-          max_tokens: 150,
+          scoreType,
+          currentScore,
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
-  
-      // Extract and return the suggestion from the OpenAI response
-      return data.choices[0].text.trim();
+
+      switch (scoreType) {
+        case 'eye contact':
+          setEyeContactSuggestion(data.questions);
+          console.log('eyecontact',eyeContactSuggestion);
+          break;
+        case 'confidence':
+          setConfidenceSuggestion(data.questions);
+          console.log('confidence',confidenceSuggestion)
+          break;
+        case 'clarity':
+          setClaritySuggestion(data.questions);
+          console.log('clarity',claritySuggestion);
+          break;
+        case 'boldness':
+          setBoldnessSuggestion(data.questions);
+          break;
+        default:
+          break;
+      }
     } catch (error) {
-      console.error('Error fetching suggestion from OpenAI:', error);
-      throw error; // Rethrow the error for the caller to handle
+      // setError(error.message);
+      console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    // Fetch suggestions for each score type
+    fetchSuggestionFromOpenAI('eye contact', eye_contact);
+    fetchSuggestionFromOpenAI('confidence', confidence);
+    fetchSuggestionFromOpenAI('clarity', clarity);
+    fetchSuggestionFromOpenAI('boldness', boldness);
+    setLoading(false);
+  }, []);
+
 
   if (loading) {
     return (
@@ -186,9 +186,12 @@ export default function Feedback() {
             Eye Contact
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text>
+            <div>
+              {eyeContactSuggestion}
+            </div>
+            {/* <Text>
             One area of improvement for your interview skills is your eye contact. Eye contact is important because it shows confidence, interest and respect for the interviewer. According to some studies, the optimal eye contact percentage is around 60-70%. You made eye contact only 40% of the time, which might have given the impression that you were nervous, distracted or uninterested. To improve your eye contact, you can practice with a friend or a mirror, and try to maintain a natural and comfortable gaze. Avoid staring too intensely or looking away too frequently. 
-</Text>
+</Text> */}
           </Stack>
         </Stack>
       </Box>
@@ -242,9 +245,12 @@ export default function Feedback() {
             Confidence
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text>
+            <div>
+              {confidenceSuggestion}
+            </div>
+            {/* <Text>
             You showed a good level of confidence during the interview, which is important for communicating your skills and abilities. However, you also need to balance your confidence with humility and respect for others. Sometimes, you came across as too self-assured or arrogant, which might create a negative impression on the interviewer. Try to be more aware of how you present yourself and avoid making statements that might sound boastful or dismissive of other people's opinions or experiences.
-</Text>
+</Text> */}
           </Stack>
         </Stack>
       </Box>
@@ -299,9 +305,12 @@ export default function Feedback() {
             Clarity
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text>
+          <div>
+          {claritySuggestion}
+          </div>
+            {/* <Text>
             One of the areas that you need to improve on is your clarity of speech. During the interview, I noticed that you were speaking very softly and mumbling your words, which made it hard for me to understand your answers. This can affect your chances of getting hired, as employers want to communicate effectively with their employees. You should practice speaking louder and more confidently, and enunciate your words clearly. This will help you convey your ideas better and make a good impression.
-</Text>
+</Text> */}
           </Stack>
         </Stack>
       </Box>
@@ -355,9 +364,9 @@ export default function Feedback() {
             Boldness
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text>
+            <div>
               {boldnessSuggestion}
-            </Text>
+            </div>
             {/* <Text>
             I think the guy who makes his boldness 100% while attending an interview is confident and assertive. He shows that he is not afraid to speak his mind and express his opinions. He also demonstrates that he can handle challenging situations and deal with criticism. However, he should also be careful not to come across as arrogant or rude. He should balance his boldness with respect and humility. He should listen to the interviewer's questions and feedback, and acknowledge his strengths and weaknesses. He should also show interest and enthusiasm for the job and the company.
 

@@ -47,7 +47,7 @@ function SignupCard() {
         // Simulate a 2-second delay for signing up
         setTimeout(() => {
           setIsLoading(false);
-          navigate('/camera');
+          navigate('/userdetails');
         }, 2000);
       })
       .catch((error) => {
