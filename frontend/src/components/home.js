@@ -38,7 +38,7 @@
                     <img src={picture} alt="GIF" className="w-full h-auto" />
                   </div>
 
-                  <div className="space-y-2 xl:pt-56">
+                  <div className="space-y-2 xl:pt-[8rem]">
                     <h1 className="text-3xl ml-[5rem] font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-400">
                       <Typewriter
                         onInit={(typewriter) => {

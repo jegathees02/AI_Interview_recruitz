@@ -12,14 +12,13 @@ import cv2
 import numpy as np
 from flask import jsonify
 from tensorflow.keras.models import load_model
-from moviepy.video.io.VideoFileClip import VideoFileClip
-
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)
 
 
-UPLOAD_FOLDER = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/'
+UPLOAD_FOLDER = 'D:\CLG\AI_Interview_recruitz\backend\server'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def upload_video(video_data):        
@@ -40,34 +39,20 @@ def upload_video(video_data):
         return jsonify({'error': 'No video data provided'}), 400
     
 
-# def extract_audio(input_file, output_file):
-#     command = [
-#         "ffmpeg",
-#         "-i", input_file,
-#         "-y",  # Overwrite output files
-#         output_file
-#     ]
+def extract_audio(input_file, output_file):
+    command = [
+        "ffmpeg",
+        "-i", input_file,
+        "-y", output_file,
+    ]
     
-#     subprocess.run(command)
-    
-def extract_high_quality_audio(video_path, output_audio_path):
-    try:
-        video_clip = VideoFileClip(video_path)
-        audio_clip = video_clip.audio
+    subprocess.run(command)
 
-        # Set high-quality parameters for audio extraction
-        audio_clip.write_audiofile(output_audio_path, codec='pcm_s16le', bitrate='384k')
+    def voice_extraction_main():
+        input_file = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "uploaded_video.webm")
+        output_file = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "output.mp3")  # Replace with the desired name for the output MP3 file
 
-        print(f"High-quality audio extracted and saved to {output_audio_path}")
-
-    except Exception as e:
-        print(f"Error: {e}")
-
-def voice_extraction_main():
-    input_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm"  # Replace with the path to your WebM file
-    output_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"  # Replace with the desired name for the output MP3 file
-
-    extract_high_quality_audio(input_file, output_file)
+        extract_audio(input_file, output_file)
     
 
 
@@ -76,8 +61,8 @@ def voice_extraction_main():
 def eye_tracking_method(video_path):
     # eye_detector = cv2.CascadeClassifier("/home/jegathees5555/Documents/recruitz/backend/eye_track/haarcascade_eye.xml")
     cascade_classifiers = [
-        cv2.CascadeClassifier("/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/haarcascade_eye.xml"),
-        cv2.CascadeClassifier("/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/haarcascade_frontalface_default.xml")
+        cv2.CascadeClassifier("D:\CLG\AI_Interview_recruitz\backend\server\haarcascade_eye.xml"),
+        cv2.CascadeClassifier("D:\CLG\AI_Interview_recruitz\backend\server\haarcascade_frontalface_default.xml")
         # Add your second Haar Cascade classifier here if needed
     ]
 
@@ -141,7 +126,7 @@ def classify_emotion(predictions):
 def check_happiness(video_path):
     try:
         cap = cv2.VideoCapture(video_path)
-        emotion_model = load_model('/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/imageclassifier.h5')
+        emotion_model = load_model(os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "imageclassifier.h5"))
 
         # Check if the camera is opened successfully
         if not cap.isOpened():
@@ -207,8 +192,6 @@ def check_happiness(video_path):
         if frame_count > 0:
             # Calculate the average happiness and sadness percentages
             average_happiness = total_happiness_percentage / frame_count
-            if(average_happiness >= 98):
-                return 1
             # average_sadness = total_sadness_percentage / frame_count
 
             print(f'Average Happiness Percentage: {average_happiness:.2f}%')
@@ -230,7 +213,7 @@ def check_happiness(video_path):
 
 def calculate_clarity():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"
+        audio_file = "D:\CLG\AI_Interview_recruitz\backend\server\output.mp3"
 
         # Load the audio file
         y, sr = librosa.load(audio_file)
@@ -245,7 +228,7 @@ def calculate_clarity():
         mean_centroid = np.mean(spectral_centroid)
         print(mean_centroid/25)
 
-        return (mean_centroid / 250) * 2
+        return (mean_centroid / 25) - 30
 
     except Exception as e:
         # Handle the exception here
@@ -256,7 +239,7 @@ def calculate_clarity():
 
 def calculate_boldness():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"
+        audio_file = "D:\CLG\AI_Interview_recruitz\backend\server\output.mp3"
 
         # Load the audio file
         y, sr = librosa.load(audio_file)
@@ -304,7 +287,7 @@ def upload_frontend_video():
 @app.route('/get_result', methods=['GET'])
 def getResult():
     try:
-        video_path = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm'
+        video_path = os.path.join("D:", "CLG", "AI_Interview_recruitz", "backend", "server", "uploaded_video.webm")
         eye_contact = check_happiness(video_path)
         eye_contact = round(eye_contact,2)
         if(eye_contact == 1) :
@@ -313,7 +296,7 @@ def getResult():
                 return jsonify({ "eye_contact": eye_contact , "boldness" : 1, "clarity" : 1, "confidence" : 1, "overall" : 1})
                 # else:
                 #     return jsonify({ "eye_contact": eye_contact , "boldness" : boldness, "clarity" : clarity, "confidence" : confidence, "overall" : overall})
-        voice_extraction_main()
+        # voice.voice_extraction_main()
         # voice_quality_analysis = voice_output.voice_quality()
         clarity = round(float(calculate_clarity()),2)
         boldness = round(float(calculate_boldness()),2)

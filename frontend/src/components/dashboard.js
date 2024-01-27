@@ -72,13 +72,13 @@ const Dashboard = () => {
       enabled: false,
     },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
       
-        colors: ["#14b8a6"],  
+      colors: ["#008ffb", "#00e396","#feb019","#ff4560"],  
       
     },
     title: {
-      text: "Solution",
+      text: "Analysis",
       align: "center",
       style: {
         color: "#0f766e", // Set the title color here
@@ -107,10 +107,24 @@ const Dashboard = () => {
 
   const [series, setSeries] = useState([
     {
-      name: "Score",
+      name: "Eye Contact",
       data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
     },
+    {
+      name: "Confidence",
+      data: [20, 32, 45, 38, 56, 72, 84, 105, 120],
+    },
+    {
+      name: "Boldness",
+      data: [30, 52, 45, 78, 26, 42, 94, 125, 150],
+    },
+    {
+      name: "Clarity",
+      data: [40, 12, 4, 18,46, 92, 64, 135, 140],
+    },
   ]);
+  
+  // OverAll
   const [optionsA, setOptionsA] = useState({
     chart: {
       height: 350,
@@ -123,7 +137,7 @@ const Dashboard = () => {
       enabled: false,
     },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
       colors: ["#14b8a6"], 
     },
     title: {
@@ -288,7 +302,7 @@ const Dashboard = () => {
                   <ReactApexChart
                     options={options}
                     series={series}
-                    type="line"
+                    type="area"
                     height={450}
                     width={450}
                   />
