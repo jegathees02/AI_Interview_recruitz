@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const OpenAI = require('openai');
 const authRoutes = require('./router/authRoutes/signup');
+const updateRoutes = require('./router/updateRoutes/courseupdate');
+const getRoutes = require('./router/getRoutes/dashboard');
+const deleteRoutes = require('./router/deleteRoutes/deleteAll');
 // const chatgptRoutes = require('./router/gpt/chatgpt')
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,7 +16,10 @@ const MONGOURI = "mongodb+srv://recruitz_softflow:recruitz_softflow@recruitzmain
 app.use(express.json());
 app.use(cors());
 // app.use('/gpt',chatgptRoutes);
+app.use('/update',updateRoutes);
 app.use('/',authRoutes);
+app.use('/get',getRoutes);
+app.use('/delete',deleteRoutes);
 
 const openai = new OpenAI({ apiKey: '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' });
 app.post('/generate-questions', async (req, res) => {

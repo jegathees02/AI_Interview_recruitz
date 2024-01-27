@@ -10,6 +10,32 @@ import coin from "../assets/wired-lineal-298-coins.gif";
 import rank from "../assets/wired-flat-153-bar-chart.gif";
 import profile from "../assets/wired-outline-261-emoji-smile.gif"
 const Dashboard = () => {
+  const [dashboardData, setDashboardData] = useState([]);
+  const [name,setName] = useState('');
+  const [coins,setCoins] = useState(0);
+  const [level,setLevel] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        localStorage.setItem('userEmail', 'newuser@gmail.com');
+        // const userEmail = localStorage.getItem('userEmail');
+        const response = await fetch(`http://localhost:5000/get/dashboard/newuser@gmail.com`);
+        const data = await response.json();
+        setName(data.firstName);
+        setCoins(data.coins);
+        setLevel(data.level);
+
+        // Update the dashboardData state with the fetched data
+        setDashboardData([data]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle errors appropriately
+      }
+    };
+
+    fetchData();
+  }, []);
+  console.log(dashboardData);
   const generateData = (count, range) => {
     const data = [];
     for (let i = 0; i < count; i++) {
@@ -67,7 +93,7 @@ const Dashboard = () => {
 
   const [series, setSeries] = useState([
     {
-      name: "Desktops",
+      name: "Score",
       data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
     },
   ]);
@@ -116,7 +142,7 @@ const Dashboard = () => {
 
   const [seriesA, setSeriesA] = useState([
     {
-      name: "Desktops",
+      name: "Performance",
       data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
     },
   ]);
@@ -162,7 +188,7 @@ const Dashboard = () => {
                 id="username"
                 className="text-[28px] font-bold mt-[20px] sm:mt-[40px] text-teal-500 sm:ml-[30px] ml-0"
               >
-                Sanjeevi
+                {name}
               </div>
               <div
                 id="username"
@@ -175,13 +201,13 @@ const Dashboard = () => {
             <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
                 <img src={coin} alt="logo" className="w-12" />
                 <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
-                  986
+                  {coins}
                 </i>
               </div>
               <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
                 <img src={rank} alt="logo" className="w-12" />
                 <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
-                  986
+                  {level}
                 </i>
               </div>
               <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
