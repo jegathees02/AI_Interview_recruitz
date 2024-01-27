@@ -18,7 +18,13 @@ import {
   useDisclosure,
   Text,
   Heading,
-  useColorModeValue
+  useColorModeValue,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from '@chakra-ui/react';
 
 // var ec = 0;
@@ -34,24 +40,38 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const loadingTexts = ["Processing your video...", "Analyzing your face...", "Analyzing your voice...", "Generating insights..."];
-
+  const [showRetakeModal, setShowRetakeModal] = useState(false);
 
   useEffect(() => {
-    const fetchData =  async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5001/get_result');
-        // Simulate a loading delay for demonstration purposes
-        setBackend_data(response.data);
-        localStorage.setItem('eye', JSON.stringify(response.data.eye_contact));
-        localStorage.setItem('conf',JSON.stringify(response.data.confidence));
-        localStorage.setItem('clarity',JSON.stringify(response.data.clarity));
-        localStorage.setItem('boldness',JSON.stringify(response.data.boldness));
-        console.log(response.data);
-        // setTimeout(() => {
-          setLoading(false);
-        // },12000);
+
+        const allValuesAreOne = Object.values(response.data).every(
+          (value) => value === 1
+        );
+
+        if (allValuesAreOne) {
+          // Set the state to show the retake modal
+          setShowRetakeModal(true);
+        } else {
+          // Update the state if values are not all 1
+          setBackend_data(response.data);
+          localStorage.setItem('eye', JSON.stringify(response.data.eye_contact));
+          localStorage.setItem('conf', JSON.stringify(response.data.confidence));
+          localStorage.setItem('clarity', JSON.stringify(response.data.clarity));
+          localStorage.setItem(
+            'boldness',
+            JSON.stringify(response.data.boldness)
+          );
+          console.log(response.data);
+
+          setTimeout(() => {
+            setLoading(false);
+          }, 12000);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
         setLoading(false);
       }
     };
@@ -59,7 +79,6 @@ const App = () => {
     fetchData();
   }, []);
 
-  
   useEffect(() => {
     if (loading) {
       const interval = setInterval(() => {
@@ -155,7 +174,34 @@ const App = () => {
          <p style={{ fontSize: '20px', marginLeft: '10px' }}>{loadingTexts[loadingTextIndex]}</p>
        </div>
       ) : (
+        
         <>
+        {showRetakeModal && (
+          <AlertDialog
+            isOpen={showRetakeModal}
+            leastDestructiveRef={undefined}
+            onClose={() => setShowRetakeModal(false)}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  Retake the Test
+                </AlertDialogHeader>
+
+                <AlertDialogBody>
+                  It seems that all values are 1. Please retake the test to get accurate results.
+                </AlertDialogBody>
+
+                <AlertDialogFooter>
+                  <Button colorScheme="teal" onClick={() => setShowRetakeModal(false)}>
+                    Close
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
+        )}
+      
             <NavBar />
             <Box>
               <Button variant={'outline'} borderColor={'teal'} marginLeft={5} marginTop={5} onClick={() => navigate('/camera')}>
