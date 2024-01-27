@@ -21,9 +21,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        localStorage.setItem('userEmail', 'newuser@gmail.com');
-        // const userEmail = localStorage.getItem('userEmail');
-        const response = await fetch(`http://localhost:5000/get/dashboard/newuser@gmail.com`);
+        // localStorage.setItem('userEmail', 'newuser@gmail.com');
+        const userEmail = localStorage.getItem('userEmail');
+        const response = await fetch(`http://localhost:5000/get/dashboard/${userEmail}`);
         const data = await response.json();
         setName(data.firstName);
         setCoins(data.coins);
@@ -341,7 +341,7 @@ const Dashboard = () => {
             <thead class="[&amp;_tr]:border-b text-teal-500 font-bold">
               <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                 <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
-                  Name
+                  S.NO
                 </th>
                 <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                   Status

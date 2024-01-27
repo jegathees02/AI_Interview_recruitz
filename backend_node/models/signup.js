@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const scoreSchema = new mongoose.Schema({
+  timestamp : {type : Date},
   confidence: { type: Number },
   eye_contact: { type: Number },
   clarity: { type: Number },
