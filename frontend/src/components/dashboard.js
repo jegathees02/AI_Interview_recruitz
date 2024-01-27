@@ -7,18 +7,22 @@ import ApexCharts from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { Player } from "@lordicon/react";
 import AOS from "aos";
+import { Spinner } from "@chakra-ui/react";
 import "aos/dist/aos.css";
 import coin from "../assets/wired-lineal-298-coins.gif";
 import rank from "../assets/wired-flat-153-bar-chart.gif";
 import gift from "../assets/wired-flat-412-gift.gif";
 import profile from "../assets/wired-outline-261-emoji-smile.gif"
 const Dashboard = () => {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-   
-    AOS.init({
-      duration: 2500,
-     
-    });
+    
+    setTimeout(() => {
+      setLoading(false); 
+      AOS.init({
+        duration: 1500,
+      });
+    }, 1000); 
   }, []);
   const generateData = (count, range) => {
     const data = [];
@@ -162,8 +166,29 @@ const Dashboard = () => {
 
   return (
     <div>
+      {loading ? (
+        // Show loader while data is being fetched or processed
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="teal.500"
+            size="xl"
+          />
+          <p> &nbsp; Loading</p>
+        </div>
+      ) : (
       <>
         <NavBar />
+        
         <div className="w-[calc(100%-72px)] h-[260px] sm:h-[160px] bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
           <div id="main" className="flex flex-col sm:flex-row h-fit">
             <div id="porfile-pic">
@@ -365,8 +390,7 @@ const Dashboard = () => {
         </div>
         
       </>
-
-      <></>
+      )}
     </div>
   );
 };
