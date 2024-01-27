@@ -25,8 +25,8 @@ const CourseCompletionCard = () => {
         >
           <Image
             objectFit="cover"
-            maxW={{ base: "100%", sm: "200px" }}
-            src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+            maxW={{ base: "90%", sm: "200px" }}
+            src="https://wallpaperaccess.com/full/9425008.jpg"
             alt="Caffe Latte"
           />
 
@@ -35,13 +35,13 @@ const CourseCompletionCard = () => {
               <div className="progress-div">
                 <Heading size="md">Fundamentals of C++</Heading>
                 <Progress
-                  value={85}
+                  value={45}  
                   size="xs"
                   colorScheme="teal"
                   width="100%"
                 />
                 <Text py="2">
-                  85% <br /> 6hr 30min
+                  45% <br /> 6hr 30min
                 </Text>
               </div>
             </CardBody>
@@ -57,8 +57,8 @@ const CourseCompletionCard = () => {
         >
           <Image
             objectFit="cover"
-            maxW={{ base: "100%", sm: "200px" }}
-            src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+            maxW={{ base: "90%", sm: "200px" }}
+            src="https://wallpaperaccess.com/full/1398331.jpg"
             alt="Caffe Latte"
           />
           <Stack>

@@ -28,9 +28,9 @@ interface Props {
 }
 // const Links = ['Home', 'About', 'Feedback',];
 const Links = [
-  { label: 'HOME', path: '/' },
-  { label: 'COURSES', path: '/about' },
-  { label: 'INTERVIEW', path: '/feedbackuser' },
+  { label: 'Home', path: '/' },
+  { label: 'Courses', path: '/courses' },
+  { label: 'Interview', path: '/feedbackuser' },
 ];
 const Links1 = ['HOME', 'COURSES', 'Feedback','SignUp','Login'];
 const NavLink = (props: Props) => {
@@ -53,6 +53,16 @@ const NavLink = (props: Props) => {
 };
 
 export default function WithAction() {
+  const confirmLogout = () => {
+    const userConfirmed = window.confirm('Are you sure you want to logout?');
+    if (userConfirmed) {
+      handleLogout();
+    }
+  };
+  const handleLogout = () => {
+   
+    navigate('/');
+  };
 const navigate=useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -133,13 +143,13 @@ const navigate=useNavigate();
                 </Box>
                 <br />
                 <Center>
-                  <Text>Sample User</Text>
+                  <Text>Sanjeevi</Text>
                 </Center>
                 <br />
                 <MenuDivider />
+                <MenuItem onClick={()=>{navigate('/dashboard')}}>Dashboard</MenuItem>
                 <MenuItem onClick={()=>{navigate('/edit')}}>Account Settings</MenuItem>
-                <MenuItem onClick={()=>{navigate('/userdetails')}}>User Registration</MenuItem>
-                <MenuItem>Logout</MenuItem>
+                <MenuItem onClick={confirmLogout}>Logout</MenuItem>
               </MenuList>
             </Menu>
           </HStack>

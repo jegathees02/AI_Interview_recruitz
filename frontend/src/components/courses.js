@@ -12,7 +12,7 @@ import { useLocation } from "react-router-dom";
 const Course = () => {
   const [showCard, setShowCard] = useState(false);
   const location = useLocation();
-  const score = 90;
+  const score = 74;
   useEffect(() => {
     AOS.init();
     const delay = setTimeout(() => {
@@ -38,11 +38,12 @@ const Course = () => {
                 data-aos="zoom-in-right"
                 data-aos-duration="3000"
               >
-                <Heading fontSize="30px" m="20px" color="black">
+                <Heading fontSize="30px" m="20px" className="italic text-teal-700">
                   My Learnings
                 </Heading>
                 <CourseCompletionCard />
               </div>
+              
               <div
                 className="right-half"
                 data-aos="zoom-in-left"
@@ -57,14 +58,14 @@ const Course = () => {
                  variant="outline"
                  w="100%">
                 <div className="ml-[8rem] mt-5">
-                  <CircularProgressTemplate value="85" color="green.400" />
-                  <Text m="20px" fontSize="20px" as="b">
+                  <CircularProgressTemplate value="65" color="green.400" />
+                  <Text m="20px" fontSize="20px" as="i" >
                     Course Progression
                   </Text>
                 </div>
                 <div className="mt-5">
                   <CircularProgressTemplate value={score} color="green.400" />
-                  <Text m="20px" fontSize="20px" as="b">
+                  <Text m="20px" fontSize="20px" as="i">
                     Assesment Progression
                   </Text>
                 </div>
@@ -74,7 +75,7 @@ const Course = () => {
           </div>
           <div>
             <div className=" bg-gray-100 m-5 h-full mt-[8px] rounded-lg border border-borders">
-              <Heading fontSize="30px" m="20px" color="black" marginBottom={50}>
+              <Heading fontSize="30px" m="20px" marginBottom={50} className="italic  text-teal-700  ">
                 Recommended Courses
               </Heading>
               <TopRatedCourses />

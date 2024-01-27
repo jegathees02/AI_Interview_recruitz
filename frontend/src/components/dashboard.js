@@ -6,8 +6,12 @@ import ApexChart from "../Charts/linechart";
 import ApexCharts from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { Player } from "@lordicon/react";
+import AOS from "aos";
+import { Spinner } from "@chakra-ui/react";
+import "aos/dist/aos.css";
 import coin from "../assets/wired-lineal-298-coins.gif";
 import rank from "../assets/wired-flat-153-bar-chart.gif";
+import gift from "../assets/wired-flat-412-gift.gif";
 import profile from "../assets/wired-outline-261-emoji-smile.gif"
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState([]);
@@ -36,6 +40,16 @@ const Dashboard = () => {
     fetchData();
   }, []);
   console.log(dashboardData);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    
+    setTimeout(() => {
+      setLoading(false); 
+      AOS.init({
+        duration: 1500,
+      });
+    }, 1000); 
+  }, []);
   const generateData = (count, range) => {
     const data = [];
     for (let i = 0; i < count; i++) {
@@ -168,19 +182,44 @@ const Dashboard = () => {
       colors: ["#52BE80"],
       title: {
         text: "HeatMap Chart (Single color)",
+        align: "center",
+        style: {
+          color: "#0f766e", // Set the title color here
+        },
       },
     },
   });
 
   return (
     <div>
+      {loading ? (
+        // Show loader while data is being fetched or processed
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="teal.500"
+            size="xl"
+          />
+          <p> &nbsp; Loading</p>
+        </div>
+      ) : (
       <>
         <NavBar />
+        
         <div className="w-[calc(100%-72px)] h-[260px] sm:h-[160px] bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
           <div id="main" className="flex flex-col sm:flex-row h-fit">
             <div id="porfile-pic">
               <div className="w-[80px] h-[80px] mt-[40px] border border-borders sm:ml-[50px] mx-auto rounded-lg  items-center justify-center flex">
-              <img src={profile} alt="logo" className="w-12" />
+              <img src={profile} alt="logo" className="w-15" />
               </div>
             </div>
             <div className="flex flex-col w-[280px] text-center sm:text-left mx-auto sm:ml-0">
@@ -211,9 +250,9 @@ const Dashboard = () => {
                 </i>
               </div>
               <div className="w-[80px] h-[80px] mt-[40px] border border-borders ml-[20px]     rounded-lg relative flex items-center justify-center">
-                <img src={coin} alt="logo" className="w-12" />
+                <img src={gift} alt="logo" className="w-12" />
                 <i className="bi bi-x-lg font-bold text-borders absolute left-1/2 -translate-x-1/2 top-[-0.5rem] -translate-y-1/2">
-                  986
+                  Try Now!  
                 </i>
               </div>
             </div>
@@ -271,8 +310,19 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        {/* Heat Map */}
+        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders" data-aos="fade-left">
+          <div id="chart">
+            <ReactApexChart
+              options={chartData.options}
+              series={chartData.series}
+              type="heatmap"
+              height={350}
+            />
+          </div>
+        </div>
         {/* Table */}
-        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
+        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders hover:shadow-xl" data-aos="fade-right">
           <table class="w-full caption-bottom text-sm">
             <thead class="[&amp;_tr]:border-b text-teal-500 font-bold">
               <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -364,20 +414,9 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
-        {/* Heat Map */}
-        <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders">
-          <div id="chart">
-            <ReactApexChart
-              options={chartData.options}
-              series={chartData.series}
-              type="heatmap"
-              height={350}
-            />
-          </div>
-        </div>
+        
       </>
-
-      <></>
+      )}
     </div>
   );
 };

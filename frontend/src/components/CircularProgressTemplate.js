@@ -10,7 +10,11 @@ const CircularProgressTemplate = ({value}) => {
   console.log(val);
   return (
     <div className="circular-progress">
-      <CircularProgress value={val} color="teal" size="200px" thickness='5px'>
+      <CircularProgress  value={val}
+        color="teal"
+        size="200px"
+        thickness="5px"
+        transition="all 0.5s ease-in-out">
         <CircularProgressLabel color="#1a202c">{val}%</CircularProgressLabel>
       </CircularProgress>
     </div>
