@@ -70,7 +70,7 @@ const Userdetails = () => {
       isClosable: true,
     });
   };
-
+  
   const handleSubmit = () => {
     // Handle form submission
     toast({
@@ -80,6 +80,8 @@ const Userdetails = () => {
       duration: 1000,
       isClosable: true,
     });
+    window.localStorage.setItem("level",assessmentLevel);
+    window.localStorage.setItem("experience",experience);
     navigate('/camera');
   };
 
