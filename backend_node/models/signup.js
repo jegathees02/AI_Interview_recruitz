@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
   },
   coins: { type: Number, default: 0 },
   level: { type: Number, default: 0 },
+  rank: {type: Number,default: 0}
 });
 
 const User = mongoose.model('User', userSchema);

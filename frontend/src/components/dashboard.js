@@ -18,6 +18,18 @@ const Dashboard = () => {
   const [name,setName] = useState('');
   const [coins,setCoins] = useState(0);
   const [level,setLevel] = useState(0);
+  const[scoreData,setscoreData]=useState([]);
+  const [series, setSeries] = useState([]);
+  const [seriesA, setSeriesA] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [optionsA, setOptionsA] = useState([]);
+  const eyecontactArray = [];
+  const boldnessArray = [];
+  const clarityArray = [];
+  const confidenceArray = [];
+  const timestampArray = [];
+  const overallArray = [];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,12 +37,15 @@ const Dashboard = () => {
         const userEmail = localStorage.getItem('userEmail');
         const response = await fetch(`http://localhost:5000/get/dashboard/${userEmail}`);
         const data = await response.json();
+        // console.log(data);
         setName(data.firstName);
         setCoins(data.coins);
         setLevel(data.level);
-
+        
         // Update the dashboardData state with the fetched data
         setDashboardData([data]);
+        setscoreData(data.score);
+        console.log("Score",scoreData);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Handle errors appropriately
@@ -39,6 +54,57 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log("Score", scoreData);
+
+    if (scoreData.length > 0) {
+
+      scoreData.forEach(item => {
+        eyecontactArray.push(item.eye_contact);
+        boldnessArray.push(item.boldness);
+        clarityArray.push(item.clarity);
+        confidenceArray.push(item.confidence);
+        timestampArray.push(item.timestamp);
+        overallArray.push(item.overall);
+      });
+
+      setSeriesA([
+        {
+          name: "Performance",
+          data: overallArray,
+        },
+      ])
+
+      setSeries([
+        {
+          name: "Eye Contact",
+          data: eyecontactArray,
+        },
+        {
+          name: "Confidence",
+          data: confidenceArray,
+        },
+        {
+          name: "Boldness",
+          data: boldnessArray,
+        },
+        {
+          name: "Clarity",
+          data: clarityArray,
+        },
+      ]);
+    }
+  }, [scoreData]);
+
+
+ 
+  
+  
+
+  // useEffect(() => {
+  //   console.log("confidence graph", confidencegraph);
+  // }, [confidencegraph]);
   console.log(dashboardData);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -60,120 +126,81 @@ const Dashboard = () => {
     }
     return data;
   };
-  const [options, setOptions] = useState({
-    chart: {
-      height: 350,
-      type: "line",
-      zoom: {
+
+  useEffect(() => {
+    setOptions({
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
         enabled: false,
       },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      
-      colors: ["#008ffb", "#00e396","#feb019","#ff4560"],  
-      
-    },
-    title: {
-      text: "Analysis",
-      align: "center",
-      style: {
-        color: "#0f766e", // Set the title color here
-      },  
-    },
-    grid: {
-      row: {
-        colors: ["#f3f3f3", "transparent"],
-        opacity: 0.5,
+      stroke: {
+        curve: "smooth",
+        
+        colors: ["#008ffb", "#00e396","#feb019","#ff4560"],  
+        
       },
-    },
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
-    },
-  });
+      title: {
+        text: "Analysis",
+        align: "center",
+        style: {
+          color: "#0f766e", // Set the title color here
+        },  
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"],
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        categories: timestampArray,
+      },
+    });
+    
+  },[]);
 
-  const [series, setSeries] = useState([
-    {
-      name: "Eye Contact",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-    },
-    {
-      name: "Confidence",
-      data: [20, 32, 45, 38, 56, 72, 84, 105, 120],
-    },
-    {
-      name: "Boldness",
-      data: [30, 52, 45, 78, 26, 42, 94, 125, 150],
-    },
-    {
-      name: "Clarity",
-      data: [40, 12, 4, 18,46, 92, 64, 135, 140],
-    },
-  ]);
-  
-  // OverAll
-  const [optionsA, setOptionsA] = useState({
-    chart: {
-      height: 350,
-      type: "line",
-      zoom: {
+
+    useEffect(() => {
+    setOptionsA({
+      chart: {
+        height: 350,
+        // width:350,
+        type: "line",
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
         enabled: false,
       },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      colors: ["#14b8a6"], 
-    },
-    title: {
-      text: "Overall Percentage",
-      align: "center",
-      style: {
-        color: "#0f766e", // Set the title color here
+      stroke: {
+        curve: "smooth",
+        colors: ["#14b8a6"], 
       },
-    },
-    grid: {
-      row: {
-        colors: ["#f3f3f3", "transparent"],
-        opacity: 0.9,
+      title: {
+        text: "Overall Percentage",
+        align: "center",
+        style: {
+          color: "#0f766e", // Set the title color here
+        },
       },
-    },
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
-    },
-  });
-
-  const [seriesA, setSeriesA] = useState([
-    {
-      name: "Performance",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-    },
-  ]);
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"],
+          opacity: 0.9,
+        },
+      },
+      xaxis: {
+        categories: timestampArray
+      },
+    })
+  }, []);
 
   const [chartData, setChartData] = useState({
     series: [
@@ -340,92 +367,56 @@ const Dashboard = () => {
           <table class="w-full caption-bottom text-sm">
             <thead class="[&amp;_tr]:border-b text-teal-500 font-bold">
               <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
+                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
                   S.NO
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Status
+                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                  Timestamp
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Inventory
+                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                  Eye Contact
                 </th>
-                <th class="h-12 px-4 text-left align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Vendor
+                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  Confidence
+                </th>
+                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  Clarity
+                </th>
+                <th class="h-12 px-4  align-middle text-center font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  Boldness
+                </th>
+                <th class="h-12 px-4  align-middle text-center font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  Overall Score
                 </th>
               </tr>
             </thead>
-            <tbody class="[&amp;_tr:last-child]:border-0">
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium ">
-                  Glimmer Lamps
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  In Production
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                  500 in stock
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Luminance Creations
-                </td>
-              </tr>
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                  Aqua Filters
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Available for Order
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                  750 in stock
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  HydraClean Solutions
-                </td>
-              </tr>
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                  Eco Planters
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Backordered
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                  300 in stock
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  GreenGrowth Designers
-                </td>
-              </tr>
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                  Zest Juicers
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Newly Launched
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                  1000 in stock
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  FreshTech Appliances
-                </td>
-              </tr>
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                  Flexi Wearables
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Selling Fast
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                  200 in stock
-                </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Vitality Gear Co.
-                </td>
-              </tr>
-            </tbody>
+            <tbody className="[&amp;_tr:last-child]:border-0">
+          {scoreData.map((item, index) => (
+            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 font-medium ">
+                {index + 1}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                {item.timestamp}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
+                {item.eye_contact}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
+                {item.confidence}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
+                {item.clarity}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
+                {item.boldness}
+              </td>
+              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
+                {item.overall}
+              </td>
+            </tr>
+          ))}
+        </tbody>
           </table>
         </div>
         

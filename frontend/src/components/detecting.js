@@ -135,6 +135,7 @@ const CameraApp = () => {
       
     const recorder = new MediaRecorder(stream, {
       mimeType: 'video/webm',
+      audioBitsPerSecond: 160000, 
     });
 
     recorder.ondataavailable = (event) => {
