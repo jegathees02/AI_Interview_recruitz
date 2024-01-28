@@ -45,6 +45,38 @@ app.post('/generate-questions', async (req, res) => {
     }
   });
 
+app.post('/generate-feedback', async (req, res) => {
+  //   const userMessage = "Create a list of 8 questions for an interview with a science fiction author.";
+  
+    try {
+      const { scoreType, currentScore } = req.body;
+      const userMessage = `Suggest some steps to improve ${scoreType} score from ${currentScore}%% to 95%%`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            "role": "system",
+            "content": "You will be provided with scores of eye contact, confidence , boldness or clarity of a person attending the interview. Your task is to generate human like suggestions to improve the score in a paragraph about 70 words."
+          },
+          {
+            "role": "user",
+            "content": userMessage
+          }
+        ],
+        temperature: 0.7,
+          max_tokens: 64,
+          top_p: 1,
+      });
+  
+      const assistantReply = response.choices[0].message.content;
+      res.json({ questions: assistantReply.split('\n') });
+    } catch (error) {
+      console.error('OpenAI API error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
 mongoose.connect(MONGOURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

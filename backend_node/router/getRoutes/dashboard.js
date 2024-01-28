@@ -22,9 +22,12 @@ router.get('/dashboard/:email', async (req, res) => {
         lastName: user.lastName,
         coins: user.coins,
         level: user.level,
+        overall_score:user.overall_score,
+        course:user.course,
+        score:user.score,
         // rank: user.level // Assuming 'level' represents the user's rank
       };
-  
+      console.log(userData);
       res.json(userData);
     } catch (error) {
       console.error(error);
