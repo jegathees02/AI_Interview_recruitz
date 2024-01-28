@@ -27,8 +27,40 @@ import {
   MdOutlineEmail,
 } from 'react-icons/md'
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs'
-
+import { useRef,useState } from 'react';
+import emailjs from '@emailjs/browser';
 export default function Feedbackuser() {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_4g99txq', 'template_7301zqd', form.current, 'vBlEXb3XiiYBGcs9Z')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+  };
+
+  const [formData, setFormData] = useState({
+    from_name: '',
+    user_email: '',
+    message: '',
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your form submission logic here
+    console.log('Form data submitted:', formData);
+    // You can make an API call, send the data to a server, etc.
+  };
   return (
     <>
       <NavBar />
@@ -45,8 +77,8 @@ export default function Feedbackuser() {
               <WrapItem>
                 <Box>
                   <Heading>Contact</Heading>
-                  <Text mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
-                    Fill up the form below to contact
+                  <Text mt={{ sm: 3, md: 3, lg: 5 }} color="gray.300">
+                    Fill up the form below to report
                   </Text>
                   <Box py={{ base: 5, sm: 5, md: 8, lg: 10 }}>
                     <VStack pl={0} spacing={3} alignItems="flex-start">
@@ -116,43 +148,60 @@ export default function Feedbackuser() {
               </WrapItem>
               <WrapItem>
                 <Box bg="white" borderRadius="lg">
-                  <Box m={8} color="#0B0E3F">
-                    <VStack spacing={5}>
-                      <FormControl id="name">
-                        <FormLabel>Your Name</FormLabel>
-                        <InputGroup borderColor="#E0E1E7">
-                          <InputLeftElement pointerEvents="none">
-                            <BsPerson color="gray.800" />
-                          </InputLeftElement>
-                          <Input type="text" size="md" />
-                        </InputGroup>
-                      </FormControl>
-                      <FormControl id="name">
-                        <FormLabel>Mail</FormLabel>
-                        <InputGroup borderColor="#E0E1E7">
-                          <InputLeftElement pointerEvents="none">
-                            <MdOutlineEmail color="gray.800" />
-                          </InputLeftElement>
-                          <Input type="text" size="md" />
-                        </InputGroup>
-                      </FormControl>
-                      <FormControl id="name">
-                        <FormLabel>Message</FormLabel>
-                        <Textarea
-                          borderColor="gray.300"
-                          _hover={{
-                            borderRadius: 'gray.300',
-                          }}
-                          placeholder="message"
-                        />
-                      </FormControl>
-                      <FormControl id="name" float="right">
-                        <Button variant="solid" bg="teal" color="white" _hover={{}}>
-                          Send Message
-                        </Button>
-                      </FormControl>
-                    </VStack>
-                  </Box>
+                <form ref={form} onSubmit={sendEmail}>
+      <Box m={8} color="#0B0E3F">
+        <VStack spacing={5}>
+          <FormControl id="from_name">
+            <FormLabel>Your Name</FormLabel>
+            <InputGroup borderColor="#E0E1E7">
+              <InputLeftElement pointerEvents="none">
+                <BsPerson color="gray.800" />
+              </InputLeftElement>
+              <Input
+                type="text"
+                size="md"
+                name="from_name"
+                value={formData.from_name}
+                onChange={handleChange}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl id="user_email">
+            <FormLabel>Mail</FormLabel>
+            <InputGroup borderColor="#E0E1E7">
+              <InputLeftElement pointerEvents="none">
+                <MdOutlineEmail color="gray.800" />
+              </InputLeftElement>
+              <Input
+                type="text"
+                size="md"
+                name="user_email"
+                value={formData.user_email}
+                onChange={handleChange}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl id="message">
+            <FormLabel>Message</FormLabel>
+            <Textarea
+              borderColor="gray.300"
+              _hover={{
+                borderRadius: 'gray.300',
+              }}
+              placeholder="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl id="submit" float="right">
+            <Button type="submit" variant="solid" bg="teal" color="white">
+              Send Message
+            </Button>
+          </FormControl>
+        </VStack>
+      </Box>
+    </form>
                 </Box>
               </WrapItem>
             </Wrap>
