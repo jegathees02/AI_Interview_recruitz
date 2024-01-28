@@ -1,4 +1,3 @@
-// import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/navbar";
@@ -16,6 +15,7 @@ import profile from "../assets/wired-outline-261-emoji-smile.gif"
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [name,setName] = useState('');
+  const [lname,setlName] = useState('');
   const [coins,setCoins] = useState(0);
   const [level,setLevel] = useState(0);
   const[scoreData,setscoreData]=useState([]);
@@ -29,7 +29,17 @@ const Dashboard = () => {
   const confidenceArray = [];
   const timestampArray = [];
   const overallArray = [];
+  // State to store selected date
 
+  const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  const filterDataByDate = () => {
+    return selectedDate ? scoreData.filter((item) => item.timestamp.includes(selectedDate)) : scoreData;
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,7 +51,7 @@ const Dashboard = () => {
         setName(data.firstName);
         setCoins(data.coins);
         setLevel(data.level);
-        
+        setlName(data.lastName);
         // Update the dashboardData state with the fetched data
         setDashboardData([data]);
         setscoreData(data.score);
@@ -97,7 +107,19 @@ const Dashboard = () => {
     }
   }, [scoreData]);
 
+  const [maxDate, setMaxDate] = useState("");
 
+  useEffect(() => {
+    // Calculate tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate());
+
+    // Format the date as "YYYY-MM-DD" for the input element
+    const formattedTomorrow = tomorrow.toISOString().split("T")[0];
+
+    // Set tomorrow's date as the maximum date for the date picker
+    setMaxDate(formattedTomorrow);
+  }, []);
  
   
   
@@ -268,7 +290,7 @@ const Dashboard = () => {
                 id="username"
                 className="text-[28px] font-bold mt-[20px] sm:mt-[40px] text-teal-500 sm:ml-[30px] ml-0"
               >
-                {name}
+                {name+" "+lname}
               </div>
               <div
                 id="username"
@@ -364,62 +386,81 @@ const Dashboard = () => {
         </div>
         {/* Table */}
         <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders hover:shadow-xl" data-aos="fade-right">
-          <table class="w-full caption-bottom text-sm">
-            <thead class="[&amp;_tr]:border-b text-teal-500 font-bold">
-              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
-                  S.NO
-                </th>
-                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Timestamp
-                </th>
-                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                  Eye Contact
-                </th>
-                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Confidence
-                </th>
-                <th class="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Clarity
-                </th>
-                <th class="h-12 px-4  align-middle text-center font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Boldness
-                </th>
-                <th class="h-12 px-4  align-middle text-center font-bold text-xl text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Overall Score
-                </th>
-              </tr>
-            </thead>
-            <tbody className="[&amp;_tr:last-child]:border-0">
-          {scoreData.map((item, index) => (
-            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 font-medium ">
-                {index + 1}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                {item.timestamp}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
-                {item.eye_contact}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
-                {item.confidence}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
-                {item.clarity}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
-                {item.boldness}
-              </td>
-              <td className="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">
-                {item.overall}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-          </table>
+        <div className="flex flex-col items-center">
+          <label htmlFor="datePicker" className="text-lg font-bold mb-2 text-teal-500">Select Date:</label>
+          <input
+            type="date"
+            id="datePicker"
+            value={selectedDate}
+            onChange={handleDateChange}
+            max={maxDate} 
+            className="border border-gray-400 px-3 py-1 rounded-md mb-4"
+            />
         </div>
-        
+            {filterDataByDate().length === 0 ? (
+               <div className="w-[calc(100%-72px)] h-full sm:h-full bg-gray-200 mx-auto mt-[8px] rounded-lg border border-borders hover:shadow-xl" >
+              <div className="text-center text-red-600 text-2xl mt-4 font-extrabold">No data available for the selected date.</div>
+              </div>
+            ) : (
+        <table className="w-full caption-bottom text-sm border-collapse">
+  <thead className="border-b text-teal-500 font-bold">
+    <tr className="border-b border-gray-400 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+      <th className="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground max-w-[150px]">
+        S.NO
+      </th>
+      <th className="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground hidden md:table-cell">
+        Timestamp
+      </th>
+      <th className="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground hidden md:table-cell">
+        Eye Contact
+      </th>
+      <th className="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground">
+        Confidence
+      </th>
+      <th className="h-12 px-4 text-middle align-middle font-bold text-xl text-muted-foreground">
+        Clarity
+      </th>
+      <th className="h-12 px-4 align-middle text-center font-bold text-xl text-muted-foreground">
+        Boldness
+      </th>
+      <th className="h-12 px-4 align-middle text-center font-bold text-xl text-muted-foreground">
+        Overall Score
+      </th>
+    </tr>
+  </thead>
+  <tbody className="[&amp;_tr:last-child]:border-0">
+            {filterDataByDate().map((item, index) => (
+              <tr key={index} className="border-b border-gray-400 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                {/* ... (existing code) */}
+                <td className="p-4 align-middle text-center font-medium">
+          {index + 1}
+        </td>
+        <td className="p-4 align-middle text-center hidden md:table-cell">
+          {item.timestamp}
+        </td>
+        <td className="p-4 align-middle text-center">
+          {item.eye_contact}
+        </td>
+        <td className="p-4 align-middle text-center">
+          {item.confidence}
+        </td>
+        <td className="p-4 align-middle text-center">
+          {item.clarity}
+        </td>
+        <td className="p-4 align-middle text-center">
+          {item.boldness}
+        </td>
+        <td className="p-4 align-middle text-center">
+          {item.overall}
+        </td>
+              </tr>
+            ))}
+          </tbody>
+ 
+</table>
+
+)}  
+        </div>
       </>
       )}
     </div>
