@@ -20,6 +20,13 @@ import {
   Text,
   useColorMode,
   Center,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -51,24 +58,39 @@ const NavLink = (props: Props) => {
     </Box>
   );
 };
+const email=localStorage.getItem('userEmail');
+console.log("Email",email);
+const response = await fetch(`http://localhost:5000/get/dashboard/${email}`);
+const data = await response.json();
 
 export default function WithAction() {
-  const confirmLogout = () => {
-    const userConfirmed = window.confirm('Are you sure you want to logout?');
-    if (userConfirmed) {
-      handleLogout();
-    }
-  };
-  const handleLogout = () => {
+  // const confirmLogout = () => {
+  //   const userConfirmed = window.confirm('Are you sure you want to logout?');
+  //   if (userConfirmed) {
+  //     handleLogout();
+  //   }
+  // };
+  // const handleLogout = () => {
    
-    navigate('/');
-  };
+  //   navigate('/');
+  // };
 const navigate=useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const [isNavOpen, setNavOpen] = useState(false); // State for responsive navigation
   const toggleNav = () => {setNavOpen(!isNavOpen);navigate('/login')};
   const toggleNav1 = () => {setNavOpen(!isNavOpen);navigate('/signup')};
+  const [isLogoutAlertOpen, setLogoutAlertOpen] = useState(false);
+
+  const cancelLogout = () => setLogoutAlertOpen(false);
+  const confirmLogout = () => {
+    setLogoutAlertOpen(true);
+  };
+
+  const handleLogout = () => {
+    // Perform logout actions here
+    navigate('/');
+  };
   return (
     <>
       <Box bg={useColorModeValue('white', 'gray.900')} px={4}>
@@ -143,12 +165,13 @@ const navigate=useNavigate();
                 </Box>
                 <br />
                 <Center>
-                  <Text>Sample Text</Text>
+                  <Text>{data.firstName+" "+data.lastName}</Text>
                 </Center>
                 <br />
                 <MenuDivider />
                 <MenuItem onClick={()=>{navigate('/dashboard')}}>Dashboard</MenuItem>
                 <MenuItem onClick={()=>{navigate('/edit')}}>Account Settings</MenuItem>
+                <MenuItem onClick={()=>{navigate('/feedbackuser')}}>Report</MenuItem>
                 <MenuItem onClick={confirmLogout}>Logout</MenuItem>
               </MenuList>
             </Menu>
@@ -165,6 +188,30 @@ const navigate=useNavigate();
           </Box>
         ) : null}
       </Box>
+      <AlertDialog
+        isOpen={isLogoutAlertOpen}
+        leastDestructiveRef={undefined}
+        onClose={cancelLogout}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm Logout
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to logout?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={cancelLogout} mr={3}>Cancel</Button>
+              <Button colorScheme="red" onClick={() => { cancelLogout(); handleLogout(); }}>
+                Logout
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }
