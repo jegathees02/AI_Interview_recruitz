@@ -21,19 +21,20 @@ app.use('/',authRoutes);
 app.use('/get',getRoutes);
 app.use('/delete',deleteRoutes);
 
-const openai = new OpenAI({ apiKey: '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' });
+const openai = new OpenAI({ apiKey: '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' });
 app.post('/generate-questions', async (req, res) => {
   //   const userMessage = "Create a list of 8 questions for an interview with a science fiction author.";
   
     try {
+      const {  level , experience } = req.body;
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "system", content: "Create a list of 5 basic questions for an interview with java skills  " },
+          { role: "system", content: `Create a list of 3 ${level} level questions for an interview with java skills who has ${experience} years experience. The first one should be tell about yourself` },
           // { role: "user", content: userMessage },
         ],
         temperature: 0.5,
-          max_tokens: 64,
+          max_tokens: 90,
           top_p: 1,
       });
   

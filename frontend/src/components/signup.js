@@ -44,10 +44,11 @@ function SignupCard() {
         // TextToSpeech.talk("Signup successful");
         localStorage.setItem('auth', true);
         setIsLoading(true);
+        localStorage.setItem('userEmail',userData.email);
         // Simulate a 2-second delay for signing up
         setTimeout(() => {
           setIsLoading(false);
-          navigate('/userdetails');
+          navigate('/login');
         }, 2000);
       })
       .catch((error) => {

@@ -56,17 +56,11 @@ const CameraApp = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const level = localStorage.getItem('level');
-        const experience = localStorage.getItem('experience');
-        const response = await fetch('http://localhost:5000/generate-questions', {
+        const response = await fetch('http://localhost:5000/api/generate-questions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            level,
-            experience,
-          }),
         });
 
         if (!response.ok) {
@@ -77,7 +71,7 @@ const CameraApp = () => {
         console.log(data);
 
         // Update the gptquestions array in your frontend
-        setGptQuestions(data.questions.map((question, index) => ({ name: `Question ${index + 1}`, content: question })));
+        setGptQuestions(data.questions.map((question, index) => ({ name: `Question ${index + 1}`, content: question, duration: 'Unknown' })));
       } catch (error) {
         console.error('API error:', error);
       }
@@ -141,7 +135,6 @@ const CameraApp = () => {
       
     const recorder = new MediaRecorder(stream, {
       mimeType: 'video/webm',
-      audioBitsPerSecond: 160000, 
     });
 
     recorder.ondataavailable = (event) => {
@@ -228,7 +221,7 @@ const CameraApp = () => {
             {item.name}:
           </Text>
           <Text fontSize="1rem">
-            {item.content}
+            {item.content}{'(' + item.duration + ' mins)'}
           </Text>
         </div>
       ))}

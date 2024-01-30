@@ -11,6 +11,7 @@ import Feedbackuser from './components/feedbackuser';
 import Userdetails from './components/userdetails';
 import Dashboard from './components/dashboard';
 import Course from './components/courses';
+import RecentTrends from './components/recentTrends';
 import TopRatedCourseView from './components/TopRatedCourseView';
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path='/courses' element={<Course/>} />
         <Route path="/top-rated-courses/:id" element={<TopRatedCourseView />} />
         <Route path='/feedbackuser' element={<Feedbackuser/>} />
+        <Route path='/recent' element={<RecentTrends/>} />
         <Route path='/userdetails' element={<Userdetails/>} />
       </Routes>
       </BrowserRouter>

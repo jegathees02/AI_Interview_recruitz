@@ -109,7 +109,7 @@ const Userdetails = () => {
               Resume Upload
             </Heading>
             <FormControl as={GridItem} colSpan={[6, 3, null, 2]}>
-              <FormLabel htmlFor="resume">Resume</FormLabel>
+              <FormLabel htmlFor="resume">Resume <pre>docx/pdf/txt &nbsp;&nbsp;&nbsp;maxsize-2MB</pre></FormLabel>
               <Input
                 type="file"
                 name="resume"
@@ -148,6 +148,7 @@ const Userdetails = () => {
               >
                 <option value="Intern">Intern</option>
                 <option value="FullTime">Full time</option>
+                <option value="Student">Student</option>
               
               </Select>
             </FormControl>
@@ -193,6 +194,25 @@ const Userdetails = () => {
               </FormControl>
             </>
           )}
+
+          {step === 3 && experience === 'Student' && (
+                      <>
+                        <Heading w="100%" textAlign={'center'} fontWeight="normal">
+                          Pass Out Year
+                        </Heading>
+                        <FormControl mt="2%">
+                          <FormLabel htmlFor="fullTimeExperience">Pass out Year</FormLabel>
+                          <InputGroup size="md">
+                            <Input
+                              pr="4.5rem"
+                              placeholder="Enter your Full-Time Experience"
+                              onChange={(e) => setFullTimeExperience(0)}
+                            />
+                            <InputRightElement width="4.5rem"></InputRightElement>
+                          </InputGroup>
+                        </FormControl>
+                      </>
+                    )}
         {step === 4 && (
           <>
             <Heading w="100%" textAlign={'center'} fontWeight="normal">

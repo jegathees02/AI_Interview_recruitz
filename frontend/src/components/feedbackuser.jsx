@@ -29,6 +29,7 @@ import {
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs'
 import { useRef,useState } from 'react';
 import emailjs from '@emailjs/browser';
+
 export default function Feedbackuser() {
   const form = useRef();
 
@@ -38,6 +39,10 @@ export default function Feedbackuser() {
     emailjs.sendForm('service_4g99txq', 'template_7301zqd', form.current, 'vBlEXb3XiiYBGcs9Z')
       .then((result) => {
           console.log(result.text);
+          window.location.reload(false);
+          // formData.from_name = '';
+          // formData.user_email = '';
+          // formData.message = '';
       }, (error) => {
           console.log(error.text);
       });

@@ -2,43 +2,24 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from IPython import get_ipython
 import os
-import subprocess
-import base64
+# import subprocess
+# import base64
 from pyngrok import ngrok
-import random
+# import random
 import librosa
 from concurrent.futures import ThreadPoolExecutor
 import cv2
 import numpy as np
 from flask import jsonify
 from tensorflow.keras.models import load_model
-from openai import OpenAI
-# from pathlib import Path
-import assemblyai as aai
-aai.settings.api_key = "d8406d8369974bb38d5800ea7166eaae"
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 
 app = Flask(__name__)
 CORS(app)
 
-def check_grammar(input_text):
-    client = OpenAI(api_key = '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')
-    model = "gpt-3.5-turbo" #"gpt-3.5-turbo-1106"
-    messages = [
-            {"role": "system", "content": 'The user inputs a text and prompt a percentage value of the grammar of the sentence. If it is incomplete or with errors reduce the marks based on that.output only marks as integer. If the total words is less than 6 then output 15'
-            },
-            {"role": "user", "content": input_text},
-        ]
-    response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0
-        )
-    response_message = response.choices[0].message.content
-    print(response_message )
-    return response_message
 
-UPLOAD_FOLDER = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server'
+UPLOAD_FOLDER = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def upload_video(video_data):        
@@ -59,20 +40,34 @@ def upload_video(video_data):
         return jsonify({'error': 'No video data provided'}), 400
     
 
-def extract_audio(input_file, output_file):
-    command = [
-        "ffmpeg",
-        "-i", input_file,
-        "-y", output_file,
-    ]
+# def extract_audio(input_file, output_file):
+#     command = [
+#         "ffmpeg",
+#         "-i", input_file,
+#         "-y",  # Overwrite output files
+#         output_file
+#     ]
     
-    subprocess.run(command)
+#     subprocess.run(command)
+    
+def extract_high_quality_audio(video_path, output_audio_path):
+    try:
+        video_clip = VideoFileClip(video_path)
+        audio_clip = video_clip.audio
+
+        # Set high-quality parameters for audio extraction
+        audio_clip.write_audiofile(output_audio_path, codec='pcm_s16le', bitrate='384k')
+
+        print(f"High-quality audio extracted and saved to {output_audio_path}")
+
+    except Exception as e:
+        print(f"Error: {e}")
 
 def voice_extraction_main():
-    input_file = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm'
-    output_file = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3'  # Replace with the desired name for the output MP3 file
+    input_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm"  # Replace with the path to your WebM file
+    output_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"  # Replace with the desired name for the output MP3 file
 
-    extract_audio(input_file, output_file)
+    extract_high_quality_audio(input_file, output_file)
     
 
 
@@ -130,7 +125,8 @@ def eye_tracking_method(video_path):
 
     if gaze_percentages:
         final_output = (sum(gaze_percentages) / len(gaze_percentages)) * 99 * -1
-        print(f"Average Gaze Percentage: {final_output:.2f}")
+        # print(f"Average Gaze Percentage: {final_output:.2f}")
+        print('Calculating')
         return final_output
     else:
         print("No gaze data available.")
@@ -196,13 +192,14 @@ def check_happiness(video_path):
 
                     # Interpret the predictions
                     happiness_percentage = classify_emotion(predictions)
-                    print('Analyzing')
-                    # print(f'Happiness Percentage: {happiness_percentage:.2f}%')
+
+                    print(f'Percentage: {happiness_percentage:.2f}%')
                     # print(f'Sadness Percentage: {sadness_percentage:.2f}%')
 
                     # Accumulate the happiness and sadness percentages
                     total_happiness_percentage += float(happiness_percentage)
                     # print(type(total_happiness_percentage))
+                    print('Analyzing')
                     # total_sadness_percentage += sadness_percentage
                     frame_count += 1
 
@@ -212,15 +209,15 @@ def check_happiness(video_path):
         if frame_count > 0:
             # Calculate the average happiness and sadness percentages
             average_happiness = total_happiness_percentage / frame_count
+            if(average_happiness >= 98):
+                return 1
             # average_sadness = total_sadness_percentage / frame_count
 
             print(f'Average Happiness Percentage: {average_happiness:.2f}%')
             # print(f'Average Sadness Percentage: {average_sadness:.2f}%')
-            print(gaze_percentage)
-            if(gaze_percentage > 99): return 1  # Fix the format specifier here
+            print(gaze_percentage)  # Fix the format specifier here
             average_result = (average_happiness + float(gaze_percentage)) / 2
-            if(average_result > 99): return 1
-            # print(f'Average Result: {average_result:.2f}')
+            print(f'Average Result: {average_result:.2f}')
             # print(type(average_result))
             return average_result
         else:
@@ -235,40 +232,22 @@ def check_happiness(video_path):
 
 def calculate_clarity():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"
-        
-        # URL of the file to transcribe
-        # FILE_URL = r"D:\CLG\AI_Interview_recruitz\backend\server\output.mp3"
+        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"
 
-        # You can also transcribe a local file by passing in a file path
-        # FILE_URL = './path/to/file.mp3'
-
-        transcriber = aai.Transcriber()
-        transcript = transcriber.transcribe(audio_file)
-
-        print(transcript.text)
-        if(str(transcript.text) == 'none' or str(transcript.text) == ""):
-            result = check_grammar(' yesterday.dont what that this')
-        else:
-            result = check_grammar(str(transcript.text))
-
-        # return result if result > 1 else 1
-        if(int(result) < 15): return 15
-        else: return int(result)
         # Load the audio file
-        # y, sr = librosa.load(audio_file)
+        y, sr = librosa.load(audio_file)
 
-        # # Calculate the spectrogram
-        # spectrogram = np.abs(librosa.stft(y))
+        # Calculate the spectrogram
+        spectrogram = np.abs(librosa.stft(y))
 
-        # # Calculate the spectral centroid
-        # spectral_centroid = librosa.feature.spectral_centroid(S=spectrogram)
+        # Calculate the spectral centroid
+        spectral_centroid = librosa.feature.spectral_centroid(S=spectrogram)
 
-        # # Calculate the mean of the spectral centroid
-        # mean_centroid = np.mean(spectral_centroid)
-        # print(mean_centroid/25)
+        # Calculate the mean of the spectral centroid
+        mean_centroid = np.mean(spectral_centroid)
+        print(mean_centroid/25)
 
-        # return (mean_centroid / 25) - 30
+        return (mean_centroid / 250) * 2
 
     except Exception as e:
         # Handle the exception here
@@ -279,7 +258,7 @@ def calculate_clarity():
 
 def calculate_boldness():
     try:
-        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.mp3"
+        audio_file = "/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/output.wav"
 
         # Load the audio file
         y, sr = librosa.load(audio_file)
@@ -304,60 +283,61 @@ def calculate_boldness():
 
 
 
-
-@app.route('/upload_video_new', methods=['POST'])
-def upload_frontend_video():
+def capture_and_process_video():
     try:
-         # Remove the assumption of JSON data
-        video_data = request.files['videoData']
-        upload_video(video_data)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-    # try:
-    #     result = eye_track_module()
-    # except Exception as e:
-    #     return jsonify({'error': str(e)}), 500
-    
-    # result_str = str(result)
+        cap = cv2.VideoCapture(0)  # 0 corresponds to the default camera (you may need to change this if you have multiple cameras)
 
-    return jsonify({'message': 'Video uploaded successfully', 'result': 0}), 200
+        # Set the video width and height (adjust as needed)
+        cap.set(3, 640)
+        cap.set(4, 480)
 
+        # Define the codec and create a VideoWriter object
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter(os.path.join(UPLOAD_FOLDER, 'captured_video.avi'), fourcc, 20.0, (640, 480))
 
-@app.route('/get_result', methods=['GET'])
-def getResult():
-    try:
-        video_path = '/home/jegathees5555/Documents/projects/AI_Interview_recruitz/backend/server/uploaded_video.webm'
-        eye_contact = check_happiness(video_path)
-        eye_contact = round(eye_contact,2)
-        if(eye_contact == 1) :
-            with app.app_context():
-                # if(eye_contact == 1):
-                return jsonify({ "eye_contact": eye_contact , "boldness" : 1, "clarity" : 1, "confidence" : 1, "overall" : 1})
-                # else:
-                #     return jsonify({ "eye_contact": eye_contact , "boldness" : boldness, "clarity" : clarity, "confidence" : confidence, "overall" : overall})
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Display the frame
+            cv2.imshow('Captured Video', frame)
+
+            # Write the frame to the output video file
+            out.write(frame)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # Release everything when done
+        cap.release()
+        out.release()
+        cv2.destroyAllWindows()
+
+        captured_video_path = os.path.join(UPLOAD_FOLDER, 'captured_video.avi')
+
+        # Process the captured video
+        eye_contact = check_happiness(captured_video_path)
+        eye_contact = round(eye_contact, 2)
+
+        if eye_contact == 1:
+            print("Eye contact: Need improvement")
+            return
+
         voice_extraction_main()
-        # voice_quality_analysis = voice_output.voice_quality()
-        clarity = round(float(calculate_clarity()),2)
-        boldness = round(float(calculate_boldness()),2)
-        # clarity = round(clarity,2)
-        # boldness = round(boldness,2)
-        confidence = round((eye_contact+clarity+boldness)/3,2)
-        # confidence = round(confidence,2)
-        overall = round((eye_contact+boldness+clarity+confidence)//4,2)
-        # overall = round(overall,2)
-        with app.app_context():
-            # print("clarity :"+clarity + "confidence: "+confidence +" boldness : "+boldness +" eye_contact : "+eye_contact + "Overall : "+overall)
-            # return jsonify({eye_contact})
-            return jsonify({ "eye_contact": eye_contact , "boldness" : boldness, "clarity" : clarity, "confidence" : confidence, "overall" : overall})
-    except Exception as e:
-        print(f"Error in check_happiness: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        clarity = round(float(calculate_clarity()), 2)
+        boldness = round(float(calculate_boldness()), 2)
+        confidence = round((eye_contact + clarity + boldness) / 3, 2)
+        overall = round((eye_contact + boldness + clarity + confidence) // 4, 2)
 
-    
+        print(f"Eye contact: {eye_contact}")
+        print(f"Boldness: {boldness}")
+        print(f"Clarity: {clarity}")
+        print(f"Confidence: {confidence}")
+        print(f"Overall: {overall}")
+
+    except Exception as e:
+        print(f"Error in capture_and_process_video: {str(e)}")
 
 if __name__ == '__main__':
-    # Set up ngrok and expose the Flask app
-    ngrok_tunnel = ngrok.connect(5001)
-    print('Public URL:', ngrok_tunnel.public_url)
-    app.run(host='localhost', port=5001)
+    capture_and_process_video()

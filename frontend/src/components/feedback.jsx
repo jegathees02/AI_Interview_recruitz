@@ -51,7 +51,7 @@ export default function Feedback() {
 
   const fetchSuggestionFromOpenAI = async (scoreType, currentScore) => {
     try {
-      const response = await fetch('http://localhost:5000/api/generate-feedback', {
+      const response = await fetch('http://localhost:5000/generate-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

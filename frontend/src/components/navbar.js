@@ -38,6 +38,7 @@ const Links = [
   { label: 'Home', path: '/' },
   { label: 'Courses', path: '/courses' },
   { label: 'Interview', path: '/camera' },
+  {label:'Recent Trends', path:'/recent'},  
 ];
 const Links1 = ['HOME', 'COURSES', 'Feedback','SignUp','Login'];
 const NavLink = (props: Props) => {

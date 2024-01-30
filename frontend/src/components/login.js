@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Box,
@@ -14,7 +16,7 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Spinner
+  Spinner,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
@@ -26,6 +28,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  // const navigate=useNavigate();
 
   useEffect(() => {
     // Simulate a 2-second delay before showing the card
@@ -130,6 +133,11 @@ export default function App() {
                     onClick={handleSignIn}>
                     Sign in
                   </Button>
+                </Stack>
+                <Stack pt={6}>
+                  <Text align={'center'}>
+                    New User? <Link color={'blue'} onClick={()=>navigate('/signup')}>SignUp</Link>
+                  </Text>
                 </Stack>
               </Stack>
             </Box>

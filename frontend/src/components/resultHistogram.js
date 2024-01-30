@@ -61,10 +61,30 @@ const App = () => {
           localStorage.setItem('conf', JSON.stringify(response.data.confidence));
           localStorage.setItem('clarity', JSON.stringify(response.data.clarity));
           localStorage.setItem('boldness',JSON.stringify(response.data.boldness));
+          localStorage.setItem('overall',JSON.stringify(response.data.overall));
           console.log('response',response.data);
+          const scores = {
+            timestamp : new Date(),
+            confidence: localStorage.getItem('conf'),
+            eye_contact: localStorage.getItem('eye'),
+            clarity: localStorage.getItem('clarity'),
+            boldness: localStorage.getItem('boldness'),
+            overall: localStorage.getItem('overall')
+          }
+          setLoading(false);
+          try {
+            const userEmail = localStorage.getItem('userEmail'); // Replace with the actual user email
+            const response = await axios.put(`http://localhost:5000/update/update_scores/${userEmail}/scores`, {
+              score: [scores]
+            });
+      
+            console.log(response.data);
+          } catch (error) {
+            console.error(error);
+          }
 
           // setTimeout(() => {
-            setLoading(false);
+            
           // }, 12000);
         }
       } catch (error) {
